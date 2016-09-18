@@ -2,6 +2,7 @@ package com.wit.contacts.view.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -30,6 +31,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     //current selected;
     private int SELECTED_CUR;
+    private Fragment currentFragment;
 
     // 4 bottom on bottom_bar,  contain imageview and text view
     private LinearLayout homeBtn;
@@ -79,6 +81,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         transaction.replace(R.id.fragment_pager, homeFragment);
         transaction.commit();
         SELECTED_CUR = SELECTED_HOME;
+        currentFragment = homeFragment;
     }
 
     //init 4 btn view and add listener for botton
@@ -113,12 +116,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     resetBtn();
                     homeImg.setImageResource(R.drawable.btn_home_pred);
                     homeText.setTextColor(getResources().getColor(R.color.color_btn_selected));
-                    FragmentTransaction transaction = fragmentManager.beginTransaction();
                     if(homeFragment == null) {
                         homeFragment = new HomeFragment();
                     }
-                    transaction.replace(R.id.fragment_pager, homeFragment);
-                    transaction.commit();
+                    switchFragment(currentFragment, homeFragment);
                 }
                 break;
             case R.id.bottom_btn_friend:
@@ -127,12 +128,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     resetBtn();
                     colleagueImg.setImageResource(R.drawable.btn_colleague_pred);
                     colleagueText.setTextColor(getResources().getColor(R.color.color_btn_selected));
-                    FragmentTransaction transaction = fragmentManager.beginTransaction();
                     if(colleagueFragment == null) {
                         colleagueFragment = new ColleagueFragment();
                     }
-                    transaction.replace(R.id.fragment_pager, colleagueFragment);
-                    transaction.commit();
+                    switchFragment(currentFragment, colleagueFragment);
                 }
                 break;
             case R.id.bottom_btn_discover:
@@ -141,12 +140,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     resetBtn();
                     discoverImg.setImageResource(R.drawable.btn_discover_pred);
                     discoverText.setTextColor(getResources().getColor(R.color.color_btn_selected));
-                    FragmentTransaction transaction = fragmentManager.beginTransaction();
                     if(discoverFragment == null) {
                         discoverFragment = new DiscoverFragment();
                     }
-                    transaction.replace(R.id.fragment_pager, discoverFragment);
-                    transaction.commit();
+                    switchFragment(currentFragment, discoverFragment);
                 }
                 break;
             case R.id.bottom_btn_me:
@@ -155,12 +152,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     resetBtn();
                     meImg.setImageResource(R.drawable.btn_me_pred);
                     meText.setTextColor(getResources().getColor(R.color.color_btn_selected));
-                    FragmentTransaction transaction = fragmentManager.beginTransaction();
+
                     if(meFragment == null) {
                         meFragment = new MeFragment();
                     }
-                    transaction.replace(R.id.fragment_pager, meFragment);
-                    transaction.commit();
+                    switchFragment(currentFragment, meFragment);
                 }
                 break;
             default:
@@ -168,6 +164,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    /**
+     * 在这里对Fragment进行切换，这个切换方式代替了replace，以至于每次切换的时候，不用重新实例化Fragment
+     * */
+    public void switchFragment(Fragment from, Fragment to) {
+        if (currentFragment != to) {
+            currentFragment = to;
+            FragmentTransaction transaction = fragmentManager.beginTransaction().setCustomAnimations(
+                    android.R.anim.fade_in, android.R.anim.fade_out);
+            if (!to.isAdded()) {	// 先判断是否被add过
+                transaction.hide(from).add(R.id.fragment_pager, to).commit(); // 隐藏当前的fragment，add下一个到Activity中
+            } else {
+                transaction.hide(from).show(to).commit(); // 隐藏当前的fragment，显示下一个
+            }
+        }
+    }
     /**
      * reset the btn text color and imageview:
      * 1. reset all btn to normal text color and image view

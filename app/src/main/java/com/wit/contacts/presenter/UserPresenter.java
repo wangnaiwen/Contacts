@@ -36,8 +36,6 @@ public class UserPresenter{
                 public void complete(List<Group> groups) {
                     //数据加载完后，显示到View中
                     mUserView.showUsers(groups);
-                    Log.d("wnw", groups.get(0).getName());
-                    Log.d("wnw", "you come here?");
                 }
             });
         }
