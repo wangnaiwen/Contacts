@@ -115,7 +115,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"/>
-
     </RelativeLayout>
 
     <TextView
@@ -123,7 +122,5 @@
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:layout_height="0.5dp"
-        android:background="#939292"
-        android:layout_marginTop="15dp"
-        android:layout_marginBottom="15dp"/>
+        android:background="#939292" />
 </LinearLayout>
