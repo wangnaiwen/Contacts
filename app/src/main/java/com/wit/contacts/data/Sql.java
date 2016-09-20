@@ -15,4 +15,10 @@ public class Sql {
                     "phone text not null," +
                     "position text," +
                     "groupid integer constraint group_id_fk references contact_group(id) on delete cascade)";
+
+    public static final String CREATE_BLACKLIST = "create table contact_blacklist(" +
+            "id integer primary key autoincrement," +
+            "name text not null," +
+            "phone text not null," +
+            "position text)";
 }

@@ -15,12 +15,11 @@ import java.util.List;
  */
 public class UserModelImp implements IUserModel {
 
-    private List<Group> groupList ;
+
     private GroupDao groupDao ;
     private UserDao userDao ;
 
     public UserModelImp(){
-        groupList = new ArrayList<>();
         groupDao = new GroupDaoImp();
         userDao = new UserDaoImp();
     }
@@ -29,6 +28,7 @@ public class UserModelImp implements IUserModel {
     public void loadUser(UserLoadingListener loadingListener) {
 
         //在这里从数据库获取数据
+        List<Group> groupList = new ArrayList<>();
         List<Group> groups = groupDao.selectAllGroup();
         for(int i = 0; i < groups.size();i++){
             Group group = new Group();

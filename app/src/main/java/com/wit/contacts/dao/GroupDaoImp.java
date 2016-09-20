@@ -7,6 +7,8 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.wit.contacts.bean.Group;
 import com.wit.contacts.data.ContactDatabaseHelper;
+import com.wit.contacts.model.IUserModel;
+import com.wit.contacts.model.UserModelImp;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -133,5 +135,30 @@ public class GroupDaoImp implements GroupDao{
             mDatabase.endTransaction();
         }
         return groupList;
+    }
+
+    @Override
+    public String selectGroupNameById(int id) {
+        String groupName ="";
+
+        mDatabase.beginTransaction();
+        try{
+            Cursor cursor = mDatabase.query("contact_group",null, null, null, null, null, null);
+            if (cursor.moveToFirst()){
+                do{
+                    Group group = new Group();
+                    group.setId(cursor.getInt(cursor.getColumnIndex("id")));
+                    group.setName(cursor.getString(cursor.getColumnIndex("name")));
+
+                }while (cursor.moveToNext());
+            }
+            cursor.close();
+            mDatabase.setTransactionSuccessful();   //set successful and insert to db
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            mDatabase.endTransaction();
+        }
+        return groupName;
     }
 }

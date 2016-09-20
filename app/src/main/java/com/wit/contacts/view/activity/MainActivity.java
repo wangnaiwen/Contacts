@@ -1,20 +1,34 @@
 package com.wit.contacts.view.activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.Window;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.wit.contacts.R;
+import com.wit.contacts.bean.Group;
+import com.wit.contacts.dao.GroupDao;
+import com.wit.contacts.dao.GroupDaoImp;
 import com.wit.contacts.data.ContactDatabaseHelper;
 import com.wit.contacts.view.fragment.ColleagueFragment;
 import com.wit.contacts.view.fragment.DiscoverFragment;
@@ -54,6 +68,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ColleagueFragment colleagueFragment;
     private DiscoverFragment discoverFragment;
     private MeFragment meFragment;
+
+    /**
+     * 数据库操作：新建一个组到数据库中
+     * */
+    private GroupDao groupDao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -208,12 +227,63 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_add_contacts) {
+            Toast.makeText(this,"Add One",Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(MainActivity.this, AddContactsActivity.class);
             startActivity(intent);
             return true;
         }else if(id == R.id.action_add_group){
+            Toast.makeText(this,"Add Group",Toast.LENGTH_SHORT).show();
+            showDialog();
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private AlertDialog myDialog;
+    private void showDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        // Get the layout inflater
+        LayoutInflater inflater = this.getLayoutInflater();
+        View dialogView = null;
+         // Inflate and set the layout for the dialog
+        // Pass null as the parent view because its going in the dialog layout
+        dialogView = inflater.inflate(R.layout.dialog_add_group, null);
+        final EditText addGroupEditText = (EditText)dialogView.findViewById(R.id.dialog_add_group_name);
+
+        builder.setView(dialogView)
+                // Add action buttons
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        Log.d("wnw", "null");
+                        // sign in the user ...
+                        if( addGroupEditText.getText().toString().trim().equals("")){
+                            addGroupEditText.setHint("请输入组名称");
+                            addGroupEditText.setHintTextColor(Color.RED);
+                            Log.d("wnw1",addGroupEditText.getText().toString());
+                        }else{
+                            //插入数据库，并且销毁Dialog
+                            Log.d("wnw2",addGroupEditText.getText().toString());
+                            saveGroupToDB(addGroupEditText.getText().toString());
+                            myDialog.dismiss();
+                        }
+                    }
+                })
+                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        myDialog.dismiss();
+                    }
+                });
+        builder.setTitle("请输入组名");
+        myDialog = builder.create();
+        myDialog.show();
+    }
+
+    private void saveGroupToDB(String groupName){
+        if(groupDao == null){
+            groupDao = new GroupDaoImp();
+        }
+        groupDao.insertGroup(new Group(groupName, null));
+        homeFragment.loadGroup();
     }
 }

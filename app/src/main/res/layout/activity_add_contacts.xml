@@ -22,7 +22,7 @@
             android:layout_height="match_parent"
             android:layout_centerInParent="true"
             android:gravity="center"
-            android:text="选择一个设备"
+            android:text="新建联系人"
             android:textSize="18sp"
             android:textColor="@color/color_white"/>
         <Button

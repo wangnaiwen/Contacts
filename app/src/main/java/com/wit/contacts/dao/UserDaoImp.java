@@ -1,7 +1,6 @@
 package com.wit.contacts.dao;
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
@@ -10,7 +9,6 @@ import com.wit.contacts.data.ContactDatabaseHelper;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Created by wnw on 2016/9/12.
@@ -27,7 +25,7 @@ public class UserDaoImp implements UserDao {
     @Override
     public void insertUser(User user) {
         mDatabase.beginTransaction();
-        String sql = "insert into user values(?,?,?,?,?)";
+        String sql = "insert into contact_user values(?,?,?,?,?)";
         Object object[] = new Object[]{null, user.getName(), user.getPhone(), user.getPosition(), user.getGroupId()};
         try{
             mDatabase.execSQL(sql, object);

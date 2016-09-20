@@ -21,6 +21,7 @@
         <activity android:name=".view.activity.AddContactsActivity">
 
         </activity>
+        <activity android:name=".view.activity.UserDetailInfoActivity" android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>
