@@ -99,7 +99,7 @@ public class UserDetailInfoActivity  extends AppCompatActivity implements View.O
                 startActivity( mIntent );
                 break;
             case R.id.edit_contact:
-
+                editContact();
                 break;
             case R.id.shape_contact:
 
@@ -132,6 +132,20 @@ public class UserDetailInfoActivity  extends AppCompatActivity implements View.O
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
+        if(REQUEST_CODE == requestCode){
+            if(resultCode == RESULT_OK){
+                mUser.setId(data.getIntExtra("id", -1));
+                mUser.setName(data.getStringExtra("name"));
+                mUser.setPhone(data.getStringExtra("phone"));
+                mUser.setPosition(data.getStringExtra("position"));
+                mUser.setGroupId(data.getIntExtra("groupId", -1));
+
+                mToolbar.setTitle(mUser.getName());
+                mDialContact.setText(mUser.getPhone());
+            }
+        }else {
+
+        }
     }
 
     /**

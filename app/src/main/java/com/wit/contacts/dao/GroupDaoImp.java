@@ -139,18 +139,12 @@ public class GroupDaoImp implements GroupDao{
 
     @Override
     public String selectGroupNameById(int id) {
-        String groupName ="";
-
+        String groupName = null;
         mDatabase.beginTransaction();
         try{
-            Cursor cursor = mDatabase.query("contact_group",null, null, null, null, null, null);
+            Cursor cursor = mDatabase.query("contact_group",new String[]{"name"}, "id=?", new String[]{id+""}, null, null, null);
             if (cursor.moveToFirst()){
-                do{
-                    Group group = new Group();
-                    group.setId(cursor.getInt(cursor.getColumnIndex("id")));
-                    group.setName(cursor.getString(cursor.getColumnIndex("name")));
-
-                }while (cursor.moveToNext());
+                groupName = cursor.getString(cursor.getColumnIndex("name"));
             }
             cursor.close();
             mDatabase.setTransactionSuccessful();   //set successful and insert to db
@@ -160,5 +154,23 @@ public class GroupDaoImp implements GroupDao{
             mDatabase.endTransaction();
         }
         return groupName;
+    }
+
+    @Override
+    public void updateGroupName(String name, int id) {
+        mDatabase.beginTransaction();
+        try{
+            /*String sql = "update contact_group set name=? where id=?";
+            Object object[] = new Object[]{name, id};
+            mDatabase.execSQL(sql, object);*/
+            ContentValues values = new ContentValues();
+            values.put("name", name);
+            mDatabase.update("contact_group",values,"id=?", new String[]{id+""});
+            mDatabase.setTransactionSuccessful();   //set successful and insert to db
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            mDatabase.endTransaction();
+        }
     }
 }

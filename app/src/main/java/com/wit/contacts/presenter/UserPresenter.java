@@ -40,4 +40,12 @@ public class UserPresenter{
             });
         }
     }
+
+    public void insertGroup(String name){
+        userModel.insertGroup(name);
+    }
+
+    public void updateGroupName(String name, int groupId){
+        userModel.updateGroupName(name, groupId);
+    }
 }

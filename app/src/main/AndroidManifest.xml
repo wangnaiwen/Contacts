@@ -22,6 +22,8 @@
 
         </activity>
         <activity android:name=".view.activity.UserDetailInfoActivity" android:theme="@style/AppTheme.NoActionBar"/>
+
+        <activity android:name=".view.activity.EditContactActivity"/>
     </application>
 
 </manifest>

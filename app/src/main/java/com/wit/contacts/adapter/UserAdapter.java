@@ -75,10 +75,13 @@ public class UserAdapter extends BaseExpandableListAdapter{
             childHolder.userImg = (TextView)view.findViewById(R.id.item_user_img);
             childHolder.userNameText = (TextView)view.findViewById(R.id.item_user_name);
             view.setTag(childHolder);
+            view.setTag(R.id.group_id, i);
+            view.setTag(R.id.child_id, i1);
         }else {
             childHolder = (ChildHolder)view.getTag();
         }
         childHolder.userImg.setBackgroundResource(userImgList[(int)Math.random()*6]);
+        childHolder.userImg.setText(mUserList.get(i).getUserList().get(i1).getName().substring(0,1));
         childHolder.userNameText.setText(mUserList.get(i).getUserList().get(i1).getName());
         return view;
     }
@@ -93,6 +96,8 @@ public class UserAdapter extends BaseExpandableListAdapter{
             groupHolder.groupNameText = (TextView)view.findViewById(R.id.item_group_name);
             groupHolder.childCountText = (TextView)view.findViewById(R.id.item_group_child_count);
             view.setTag(groupHolder);
+            view.setTag(R.id.group_id, i);
+            view.setTag(R.id.child_id, -1);
         }else {
             groupHolder = (GroupHolder) view.getTag();
         }

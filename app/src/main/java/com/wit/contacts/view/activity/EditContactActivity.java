@@ -95,6 +95,7 @@ public class EditContactActivity extends Activity implements View.OnClickListene
          userPhone.setText(mUser.getPhone());
          userPosition.setText(mUser.getPosition());
          pickGroupName.setText(getGroupName(mUser.getGroupId()));
+         mCurrentGroupId = mUser.getGroupId();
     }
 
     /**
@@ -102,17 +103,18 @@ public class EditContactActivity extends Activity implements View.OnClickListene
      * */
     private String getGroupName(int id){
         String groupName = null;
-
+        groupName = groupDao.selectGroupNameById(id);
+        mCurrentGroup = groupName;
         return groupName;
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()){
-            case R.id.back_arrow:
+            case R.id.edit_contact_back_arrow:
                 finish();
                 break;
-            case R.id.finish_input:
+            case R.id.edit_contact_finish_input:
                 if(userName.getText().toString().isEmpty()){
                     userName.setHint("请输入联系人姓名");
                     userName.setHintTextColor(Color.RED);
@@ -125,16 +127,24 @@ public class EditContactActivity extends Activity implements View.OnClickListene
                     pickGroupName.setHintTextColor(Color.RED);
                 }else {
                     User user = new User();
+                    user.setId(mUser.getId());
                     user.setName(userName.getText().toString());
                     user.setPhone(userPhone.getText().toString());
                     user.setPosition(userPosition.getText().toString());
                     user.setGroupId(mCurrentGroupId);
-                    userDao.insertUser(user);
-                    Log.d("wnw", "you come here?");
+                    userDao.updateUser(user);
+
+                    Intent intent = new Intent();
+                    intent.putExtra("id", user.getId());
+                    intent.putExtra("name", user.getName());
+                    intent.putExtra("phone", user.getPhone());
+                    intent.putExtra("position", user.getPosition());
+                    intent.putExtra("groupId", user.getGroupId());
+                    setResult(RESULT_OK, intent);
                     finish();
                 }
                 break;
-            case R.id.contact_group:
+            case R.id.edit_contact_group:
                 //弹出选择组别的选择框
                 showDialog();
                 break;

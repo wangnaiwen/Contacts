@@ -33,6 +33,7 @@ public class UserModelImp implements IUserModel {
         for(int i = 0; i < groups.size();i++){
             Group group = new Group();
             List<User> users = userDao.selectUserByGroupId(groups.get(i).getId());
+            group.setId(groups.get(i).getId());
             group.setName(groups.get(i).getName());
             group.setUserList(users);
             groupList.add(group);
@@ -41,5 +42,15 @@ public class UserModelImp implements IUserModel {
         if(loadingListener != null){
             loadingListener.complete(groupList);
         }
+    }
+
+    @Override
+    public void insertGroup(String groupName) {
+        groupDao.insertGroup(new Group(groupName, null));
+    }
+
+    @Override
+    public void updateGroupName(String name, int groupId) {
+        groupDao.updateGroupName(name, groupId);
     }
 }

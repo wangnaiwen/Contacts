@@ -25,6 +25,8 @@ import com.wit.contacts.dao.GroupDaoImp;
 import com.wit.contacts.dao.UserDao;
 import com.wit.contacts.dao.UserDaoImp;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,11 +38,10 @@ public class AddContactsActivity extends Activity implements View.OnClickListene
     private EditText userName;
     private EditText userPhone;
     private EditText userPosition;
-    private RelativeLayout userGroup;
+    private TextView userGroup;
 
     private ImageView backArrow;
     private Button finishInput;
-    private TextView pickGroupName;
     private AlertDialog myDialog;
     private String mCurrentGroup = null;
     private int mCurrentGroupId;
@@ -63,8 +64,7 @@ public class AddContactsActivity extends Activity implements View.OnClickListene
         userName = (EditText)findViewById(R.id.contact_name);
         userPhone = (EditText)findViewById(R.id.contact_phone);
         userPosition = (EditText)findViewById(R.id.contact_position);
-        userGroup = (RelativeLayout)findViewById(R.id.contact_group);
-        pickGroupName = (TextView)findViewById(R.id.pick_group_name);
+        userGroup = (TextView) findViewById(R.id.pick_group_name);
 
         backArrow = (ImageView)findViewById(R.id.back_arrow);
         finishInput = (Button)findViewById(R.id.finish_input);
@@ -91,8 +91,8 @@ public class AddContactsActivity extends Activity implements View.OnClickListene
                     userPhone.setHintTextColor(Color.RED);
                 }else if(mCurrentGroup == null){
                     //将数据插入数据库
-                    pickGroupName.setHint("请选择分组");
-                    pickGroupName.setHintTextColor(Color.RED);
+                    userGroup.setHint("请选择分组");
+                    userGroup.setHintTextColor(Color.RED);
                 }else {
                     User user = new User();
                     user.setName(userName.getText().toString());
@@ -104,7 +104,7 @@ public class AddContactsActivity extends Activity implements View.OnClickListene
                     finish();
                 }
                 break;
-            case R.id.contact_group:
+            case R.id.pick_group_name:
                 //弹出选择组别的选择框
                 showDialog();
                 break;
@@ -128,7 +128,7 @@ public class AddContactsActivity extends Activity implements View.OnClickListene
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 mCurrentGroup = list.get(i);
-                pickGroupName.setText(mCurrentGroup);
+                userGroup.setText(mCurrentGroup);
                 mCurrentGroupId = groups.get(i).getId();
                 myDialog.dismiss();
             }

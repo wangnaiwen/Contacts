@@ -21,4 +21,14 @@ public interface IUserModel {
     interface UserLoadingListener{
         void complete(List<Group> groups);
     }
+
+    /**
+     * insert the group
+     * */
+    void insertGroup(String groupName);
+
+    /**
+     * update the group name
+     * */
+    void updateGroupName(String name, int groupId);
 }
