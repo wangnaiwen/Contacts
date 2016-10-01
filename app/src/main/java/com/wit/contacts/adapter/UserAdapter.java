@@ -35,6 +35,10 @@ public class UserAdapter extends BaseExpandableListAdapter{
         this.mUserList = groups;
     }
 
+    public void setDatas(List<Group> groups){
+       this.mUserList = groups;
+    }
+
     @Override
     public int getChildrenCount(int i) {
         return mUserList.get(i).getUserList().size();

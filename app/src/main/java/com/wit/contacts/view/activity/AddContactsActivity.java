@@ -14,7 +14,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.wit.contacts.R;
@@ -24,8 +23,6 @@ import com.wit.contacts.dao.GroupDao;
 import com.wit.contacts.dao.GroupDaoImp;
 import com.wit.contacts.dao.UserDao;
 import com.wit.contacts.dao.UserDaoImp;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +34,8 @@ import java.util.List;
 public class AddContactsActivity extends Activity implements View.OnClickListener{
     private EditText userName;
     private EditText userPhone;
+    private EditText userPhoneMore;
+    private EditText userEmail;
     private EditText userPosition;
     private TextView userGroup;
 
@@ -63,6 +62,8 @@ public class AddContactsActivity extends Activity implements View.OnClickListene
     private void initView(){
         userName = (EditText)findViewById(R.id.contact_name);
         userPhone = (EditText)findViewById(R.id.contact_phone);
+        userPhoneMore = (EditText)findViewById(R.id.contact_phone_more);
+        userEmail = (EditText)findViewById(R.id.contact_email);
         userPosition = (EditText)findViewById(R.id.contact_position);
         userGroup = (TextView) findViewById(R.id.pick_group_name);
 
@@ -97,6 +98,8 @@ public class AddContactsActivity extends Activity implements View.OnClickListene
                     User user = new User();
                     user.setName(userName.getText().toString());
                     user.setPhone(userPhone.getText().toString());
+                    user.setPhoneMore(userPhoneMore.getText().toString());
+                    user.setEmail(userEmail.getText().toString());
                     user.setPosition(userPosition.getText().toString());
                     user.setGroupId(mCurrentGroupId);
                     userDao.insertUser(user);

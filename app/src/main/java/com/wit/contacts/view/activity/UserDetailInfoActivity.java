@@ -56,9 +56,10 @@ public class UserDetailInfoActivity  extends AppCompatActivity implements View.O
         mUser.setId(intent.getIntExtra("id", -1));
         mUser.setName(intent.getStringExtra("name"));
         mUser.setPhone(intent.getStringExtra("phone"));
+        mUser.setPhoneMore(intent.getStringExtra("phonemore"));
+        mUser.setEmail(intent.getStringExtra("email"));
         mUser.setPosition(intent.getStringExtra("position"));
         mUser.setGroupId(intent.getIntExtra("groupId", -1));
-        Log.d("wnw", mUser.getId() + mUser.getName()+ mUser.getPhone()+mUser.getPosition()+mUser.getGroupId());
     }
 
     private void initView(){
@@ -124,6 +125,8 @@ public class UserDetailInfoActivity  extends AppCompatActivity implements View.O
         intent.putExtra("id", mUser.getId());
         intent.putExtra("name", mUser.getName());
         intent.putExtra("phone", mUser.getPhone());
+        intent.putExtra("phonemore", mUser.getPhoneMore());
+        intent.putExtra("email", mUser.getEmail());
         intent.putExtra("position", mUser.getPosition());
         intent.putExtra("groupId", mUser.getGroupId());
         startActivityForResult(intent, REQUEST_CODE);
@@ -137,6 +140,8 @@ public class UserDetailInfoActivity  extends AppCompatActivity implements View.O
                 mUser.setId(data.getIntExtra("id", -1));
                 mUser.setName(data.getStringExtra("name"));
                 mUser.setPhone(data.getStringExtra("phone"));
+                mUser.setPhoneMore(data.getStringExtra("phonemore"));
+                mUser.setEmail(data.getStringExtra("email"));
                 mUser.setPosition(data.getStringExtra("position"));
                 mUser.setGroupId(data.getIntExtra("groupId", -1));
 
@@ -213,6 +218,8 @@ public class UserDetailInfoActivity  extends AppCompatActivity implements View.O
         BlackList blackList = new BlackList();
         blackList.setName(mUser.getName());
         blackList.setPhone(mUser.getPhone());
+        blackList.setPhoneMore(mUser.getPhoneMore());
+        blackList.setEmail(mUser.getEmail());
         blackList.setPosition(mUser.getPosition());
     }
 }

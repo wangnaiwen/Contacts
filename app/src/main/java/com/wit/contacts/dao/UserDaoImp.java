@@ -25,8 +25,9 @@ public class UserDaoImp implements UserDao {
     @Override
     public void insertUser(User user) {
         mDatabase.beginTransaction();
-        String sql = "insert into contact_user values(?,?,?,?,?)";
-        Object object[] = new Object[]{null, user.getName(), user.getPhone(), user.getPosition(), user.getGroupId()};
+        String sql = "insert into contact_user values(?,?,?,?,?,?,?)";
+        Object object[] = new Object[]{null, user.getName(), user.getPhone(),user.getPhoneMore(),
+                user.getEmail(), user.getPosition(), user.getGroupId()};
         try{
             mDatabase.execSQL(sql, object);
             mDatabase.setTransactionSuccessful();
@@ -58,6 +59,8 @@ public class UserDaoImp implements UserDao {
             values.put("id", user.getId());
             values.put("name", user.getName());
             values.put("phone", user.getPhone());
+            values.put("phonemore", user.getPhoneMore());
+            values.put("email", user.getEmail());
             values.put("position", user.getPosition());
             values.put("groupid", user.getGroupId());
             mDatabase.update("contact_user",values,"id=?",new String[]{user.getId()+""});
@@ -80,6 +83,8 @@ public class UserDaoImp implements UserDao {
                     user.setId(cursor.getInt(cursor.getColumnIndex("id")));
                     user.setName(cursor.getString(cursor.getColumnIndex("name")));
                     user.setPhone(cursor.getString(cursor.getColumnIndex("phone")));
+                    user.setPhoneMore(cursor.getString(cursor.getColumnIndex("phonemore")));
+                    user.setEmail(cursor.getString(cursor.getColumnIndex("email")));
                     user.setPosition(cursor.getString(cursor.getColumnIndex("position")));
                     user.setGroupId(cursor.getInt(cursor.getColumnIndex("groupid")));
                 }while (cursor.moveToNext());
@@ -105,6 +110,8 @@ public class UserDaoImp implements UserDao {
                     user.setId(cursor.getInt(cursor.getColumnIndex("id")));
                     user.setName(cursor.getString(cursor.getColumnIndex("name")));
                     user.setPhone(cursor.getString(cursor.getColumnIndex("phone")));
+                    user.setPhoneMore(cursor.getString(cursor.getColumnIndex("phonemore")));
+                    user.setEmail(cursor.getString(cursor.getColumnIndex("email")));
                     user.setPosition(cursor.getString(cursor.getColumnIndex("position")));
                     user.setGroupId(cursor.getInt(cursor.getColumnIndex("groupid")));
                 }while (cursor.moveToNext());
@@ -132,6 +139,8 @@ public class UserDaoImp implements UserDao {
                     user.setId(cursor.getInt(cursor.getColumnIndex("id")));
                     user.setName(cursor.getString(cursor.getColumnIndex("name")));
                     user.setPhone(cursor.getString(cursor.getColumnIndex("phone")));
+                    user.setPhoneMore(cursor.getString(cursor.getColumnIndex("phonemore")));
+                    user.setEmail(cursor.getString(cursor.getColumnIndex("email")));
                     user.setPosition(cursor.getString(cursor.getColumnIndex("position")));
                     user.setGroupId(cursor.getInt(cursor.getColumnIndex("groupid")));
                     userList.add(user);
@@ -159,6 +168,8 @@ public class UserDaoImp implements UserDao {
                     user.setId(cursor.getInt(cursor.getColumnIndex("id")));
                     user.setName(cursor.getString(cursor.getColumnIndex("name")));
                     user.setPhone(cursor.getString(cursor.getColumnIndex("phone")));
+                    user.setPhoneMore(cursor.getString(cursor.getColumnIndex("phonemore")));
+                    user.setEmail(cursor.getString(cursor.getColumnIndex("email")));
                     user.setPosition(cursor.getString(cursor.getColumnIndex("position")));
                     user.setGroupId(cursor.getInt(cursor.getColumnIndex("groupid")));
                     userList.add(user);

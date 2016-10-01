@@ -26,15 +26,19 @@
                 app:popupTheme="@style/AppTheme.PopupOverlay" />
 
         </android.support.design.widget.AppBarLayout>
-        <ExpandableListView
-            android:id="@+id/user_list"
+        <android.support.design.widget.TabLayout
+            android:id="@+id/layout_tab"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:background="@color/colorPrimary"
+            app:tabIndicatorColor="#ffff"
+            app:tabSelectedTextColor="#ffff"
+            app:tabTextColor="#a9d9f4">
+        </android.support.design.widget.TabLayout>
+        <android.support.v4.view.ViewPager
+            android:id="@+id/vp_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-        </ExpandableListView>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="0.3dp"
-            android:background="#8b8989"/>
+        </android.support.v4.view.ViewPager>
     </LinearLayout>
-
 </android.support.design.widget.CoordinatorLayout>

@@ -13,6 +13,8 @@ public class Sql {
                     "id integer primary key autoincrement," +
                     "name text not null," +
                     "phone text not null," +
+                    "phonemore text," +
+                    "email text," +
                     "position text," +
                     "groupid integer constraint group_id_fk references contact_group(id) on delete cascade)";
 
@@ -20,5 +22,13 @@ public class Sql {
             "id integer primary key autoincrement," +
             "name text not null," +
             "phone text not null," +
+            "phonemore text," +
+            "email text," +
             "position text)";
+    public static final String CREATE_SYSTEM_CONTACTS = "create table system_contacts(" +
+            "id integer primary key autoincrement, "+
+            "name text not null,"+
+            "phone text not null,"+
+            "phonemore text,"+
+            "email text)";
 }

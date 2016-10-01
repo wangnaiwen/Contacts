@@ -26,6 +26,8 @@ import com.wit.contacts.dao.GroupDaoImp;
 import com.wit.contacts.dao.UserDao;
 import com.wit.contacts.dao.UserDaoImp;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,12 +37,13 @@ import java.util.List;
 public class EditContactActivity extends Activity implements View.OnClickListener {
     private EditText userName;
     private EditText userPhone;
+    private EditText userPhoneMore;
+    private EditText userEmail;
     private EditText userPosition;
-    private RelativeLayout userGroup;
+    private TextView userGroup;
 
     private ImageView backArrow;
     private Button finishInput;
-    private TextView pickGroupName;
     private AlertDialog myDialog;
     private String mCurrentGroup = null;
     private int mCurrentGroupId;
@@ -62,14 +65,15 @@ public class EditContactActivity extends Activity implements View.OnClickListene
     }
 
     private void initView(){
-        userName = (EditText)findViewById(R.id.edit_contact_name);
-        userPhone = (EditText)findViewById(R.id.edit_contact_phone);
-        userPosition = (EditText)findViewById(R.id.edit_contact_position);
-        userGroup = (RelativeLayout)findViewById(R.id.edit_contact_group);
-        pickGroupName = (TextView)findViewById(R.id.edit_contact_pick_group_name);
+        userName = (EditText)findViewById(R.id.contact_name_edit);
+        userPhone = (EditText)findViewById(R.id.contact_phone_edit);
+        userPhoneMore = (EditText)findViewById(R.id.contact_phone_more_edit);
+        userEmail = (EditText)findViewById(R.id.contact_email_edit);
+        userPosition = (EditText)findViewById(R.id.contact_position_edit);
+        userGroup = (TextView) findViewById(R.id.contact_group_edit);
 
-        backArrow = (ImageView)findViewById(R.id.edit_contact_back_arrow);
-        finishInput = (Button)findViewById(R.id.edit_contact_finish_input);
+        backArrow = (ImageView)findViewById(R.id.back_arrow_edit);
+        finishInput = (Button)findViewById(R.id.finish_edit);
         backArrow.setOnClickListener(this);
         finishInput.setOnClickListener(this);
         userGroup.setOnClickListener(this);
@@ -87,14 +91,17 @@ public class EditContactActivity extends Activity implements View.OnClickListene
          mUser.setId(intent.getIntExtra("id", -1));
          mUser.setName(intent.getStringExtra("name"));
          mUser.setPhone(intent.getStringExtra("phone"));
+         mUser.setPhoneMore(intent.getStringExtra("phonemore"));
+         mUser.setEmail(intent.getStringExtra("email"));
          mUser.setPosition(intent.getStringExtra("position"));
          mUser.setGroupId(intent.getIntExtra("groupId", -1));
-         Log.d("wnw", mUser.getId() + mUser.getName()+ mUser.getPhone()+mUser.getPosition()+mUser.getGroupId());
 
          userName.setText(mUser.getName());
          userPhone.setText(mUser.getPhone());
+         userPhoneMore.setText(mUser.getPhoneMore());
+         userEmail.setText(mUser.getEmail());
          userPosition.setText(mUser.getPosition());
-         pickGroupName.setText(getGroupName(mUser.getGroupId()));
+         userGroup.setText(getGroupName(mUser.getGroupId()));
          mCurrentGroupId = mUser.getGroupId();
     }
 
@@ -111,10 +118,10 @@ public class EditContactActivity extends Activity implements View.OnClickListene
     @Override
     public void onClick(View view) {
         switch (view.getId()){
-            case R.id.edit_contact_back_arrow:
+            case R.id.back_arrow_edit:
                 finish();
                 break;
-            case R.id.edit_contact_finish_input:
+            case R.id.finish_edit:
                 if(userName.getText().toString().isEmpty()){
                     userName.setHint("请输入联系人姓名");
                     userName.setHintTextColor(Color.RED);
@@ -123,13 +130,15 @@ public class EditContactActivity extends Activity implements View.OnClickListene
                     userPhone.setHintTextColor(Color.RED);
                 }else if(mCurrentGroup == null){
                     //将数据插入数据库
-                    pickGroupName.setHint("请选择分组");
-                    pickGroupName.setHintTextColor(Color.RED);
+                    userGroup.setHint("请选择分组");
+                    userGroup.setHintTextColor(Color.RED);
                 }else {
                     User user = new User();
                     user.setId(mUser.getId());
                     user.setName(userName.getText().toString());
                     user.setPhone(userPhone.getText().toString());
+                    user.setPhoneMore(userPhoneMore.getText().toString());
+                    user.setEmail(userEmail.getText().toString());
                     user.setPosition(userPosition.getText().toString());
                     user.setGroupId(mCurrentGroupId);
                     userDao.updateUser(user);
@@ -138,13 +147,15 @@ public class EditContactActivity extends Activity implements View.OnClickListene
                     intent.putExtra("id", user.getId());
                     intent.putExtra("name", user.getName());
                     intent.putExtra("phone", user.getPhone());
+                    intent.putExtra("phonemore", user.getPhoneMore());
+                    intent.putExtra("email", user.getEmail());
                     intent.putExtra("position", user.getPosition());
                     intent.putExtra("groupId", user.getGroupId());
                     setResult(RESULT_OK, intent);
                     finish();
                 }
                 break;
-            case R.id.edit_contact_group:
+            case R.id.contact_group_edit:
                 //弹出选择组别的选择框
                 showDialog();
                 break;
@@ -168,7 +179,7 @@ public class EditContactActivity extends Activity implements View.OnClickListene
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 mCurrentGroup = list.get(i);
-                pickGroupName.setText(mCurrentGroup);
+                userGroup.setText(mCurrentGroup);
                 mCurrentGroupId = groups.get(i).getId();
                 myDialog.dismiss();
             }
