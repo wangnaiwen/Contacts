@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/wit/contacts/adapter/SortGroupMemberAdapter.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/wit/contacts/bean/GroupMemberBean.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/wit/contacts/util/CharacterParser.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/wit/contacts/util/PinyinComparator.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/wit/contacts/view/custom/ClearEditText.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/wit/contacts/view/custom/SideBar.java" charset="GBK" />
     <file url="PROJECT" charset="UTF-8" />
   </component>
 </project>

@@ -68,14 +68,16 @@ public class SystemContactsDapImp implements SystemContactsDao{
     public void deleteAllSystemContacts() {
         mDatabase.beginTransaction();
         try{
-            List<SystemContacts> contactses = selectAllSystemContacts();
+            String sql = "delete from system_contacts";
+            /*List<SystemContacts> contactses = selectAllSystemContacts();
             if(contactses != null){
                 int length = contactses.size();
                 for (int i = 0; i  < length; i++){
                     int id = contactses.get(i).getId();
                     mDatabase.delete("system_contacts","id=?",new String[]{id+""});
                 }
-            }
+            }*/
+            mDatabase.execSQL(sql);
             mDatabase.setTransactionSuccessful();
         }catch (Exception e){
             e.printStackTrace();

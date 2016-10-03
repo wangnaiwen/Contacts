@@ -1,12 +1,9 @@
 package com.wit.contacts.presenter;
 
-import android.util.Log;
-import android.view.View;
-
 import com.wit.contacts.bean.Group;
 import com.wit.contacts.model.IUserModel;
 import com.wit.contacts.model.UserModelImp;
-import com.wit.contacts.view.IUserView;
+import com.wit.contacts.view.viewInterface.IUserView;
 
 import java.util.List;
 

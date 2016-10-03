@@ -11,27 +11,18 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.ExpandableListView;
 import android.widget.Toast;
 
 import com.wit.contacts.R;
 import com.wit.contacts.adapter.TabPagerAdapter;
-import com.wit.contacts.adapter.UserAdapter;
-import com.wit.contacts.bean.Group;
-import com.wit.contacts.bean.User;
-import com.wit.contacts.presenter.UserPresenter;
-import com.wit.contacts.view.IUserView;
 import com.wit.contacts.view.activity.AddContactsActivity;
-import com.wit.contacts.view.activity.UserDetailInfoActivity;
 import com.wit.contacts.view.tab.LocalContactsTab;
 import com.wit.contacts.view.tab.SystemContactsTab;
 
@@ -42,7 +33,7 @@ import java.util.List;
  * Created by wnw on 2016/8/15.
  */
 
-public class HomeFragment extends Fragment implements IUserView{
+public class HomeFragment extends Fragment{
 
     private View mView = null;
     private TabLayout mTabLayout = null;
@@ -54,9 +45,6 @@ public class HomeFragment extends Fragment implements IUserView{
 
     private LocalContactsTab mLocalContactsTab = null;    // 两个页卡View
     private SystemContactsTab mSystemContactsTab = null;
-
-    private static UserPresenter userPresenter;
-
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -98,15 +86,12 @@ public class HomeFragment extends Fragment implements IUserView{
                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        Log.d("wnw", "null");
                         if( addGroupEditText.getText().toString().trim().equals("")){
                             addGroupEditText.setHint("请输入组名称");
                             addGroupEditText.setHintTextColor(Color.RED);
-                            Log.d("wnw1",addGroupEditText.getText().toString());
                         }else{
                             //插入数据库，并且销毁Dialog
-                            Log.d("wnw2",addGroupEditText.getText().toString());
-                            saveGroupToDB(addGroupEditText.getText().toString());
+                            mLocalContactsTab.insertGroup(addGroupEditText.getText().toString());
                             addGroupDialog.dismiss();
                         }
                     }
@@ -121,11 +106,6 @@ public class HomeFragment extends Fragment implements IUserView{
         addGroupDialog.show();
     }
 
-    private void saveGroupToDB(String groupName){
-        userPresenter.insertGroup(groupName);
-        userPresenter.load();
-    }
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -138,19 +118,7 @@ public class HomeFragment extends Fragment implements IUserView{
         ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
 
         initView();
-        loadGroup();
         return mView;
-    }
-
-    public static void loadGroup(){
-        userPresenter.load();
-    }
-
-    /**
-     * update group name
-     * */
-    public static void updateGroupName(String name, int groupId){
-        userPresenter.updateGroupName(name, groupId);
     }
 
     @Override
@@ -161,7 +129,7 @@ public class HomeFragment extends Fragment implements IUserView{
     @Override
     public void onResume() {
         super.onResume();
-        loadGroup();
+        mLocalContactsTab.reLoadData();
     }
 
     private void initView(){
@@ -187,22 +155,10 @@ public class HomeFragment extends Fragment implements IUserView{
         mTabLayout.setupWithViewPager(mViewPager);           //将TabLayout和ViewPager关联起来。
         mTabLayout.setTabsFromPagerAdapter(tabPagerAdapter); //给Tabs设置适配器
 
-        userPresenter = new UserPresenter(this);
-    }
-
-    @Override
-    public void showLoading() {
-        Toast.makeText(getContext(),"正在加载中...", Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void showUsers(List<Group> groups) {
-        mLocalContactsTab.showData(groups);
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
     }
-
 }

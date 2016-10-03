@@ -16,8 +16,9 @@ import com.wit.contacts.R;
 import com.wit.contacts.adapter.UserAdapter;
 import com.wit.contacts.bean.Group;
 import com.wit.contacts.bean.User;
+import com.wit.contacts.presenter.UserPresenter;
+import com.wit.contacts.view.viewInterface.IUserView;
 import com.wit.contacts.view.activity.UserDetailInfoActivity;
-import com.wit.contacts.view.fragment.HomeFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,12 +27,13 @@ import java.util.List;
  * Created by wnw on 2016/10/1.
  */
 
-public class LocalContactsTab implements ExpandableListView.OnChildClickListener, AdapterView.OnItemLongClickListener{
+public class LocalContactsTab implements ExpandableListView.OnChildClickListener, AdapterView.OnItemLongClickListener, IUserView{
     private View mView;
     private LayoutInflater mInflater;
     private ExpandableListView mExpandableListView;
     private Context mContext;
 
+    private UserPresenter userPresenter;
     private UserAdapter mUserAdapter;
 
     private List<Group> groupList = new ArrayList<>();
@@ -47,9 +49,17 @@ public class LocalContactsTab implements ExpandableListView.OnChildClickListener
         mExpandableListView = (ExpandableListView)mView.findViewById(R.id.user_list);
         mExpandableListView.setOnChildClickListener(this);
         mExpandableListView.setOnItemLongClickListener(this);
+        userPresenter = new UserPresenter(this);
+        reLoadData();
     }
 
-    public void showData(List<Group> groups){
+    @Override
+    public void showLoading() {
+
+    }
+
+    @Override
+    public void showUsers(List<Group> groups) {
         groupList = groups;
         if(mUserAdapter == null){
             mUserAdapter  = new UserAdapter(mContext, groupList);
@@ -57,6 +67,28 @@ public class LocalContactsTab implements ExpandableListView.OnChildClickListener
         }
         mUserAdapter.setDatas(groupList);
         mUserAdapter.notifyDataSetChanged();
+    }
+    /**
+     * new a group and insert the data to database
+     * */
+    public void insertGroup(String groupName){
+        userPresenter.insertGroup(groupName);
+        userPresenter.load();
+    }
+
+    /**
+     * update group name
+     * */
+    public void updateGroupName(String name, int groupId){
+        userPresenter.updateGroupName(name, groupId);
+        reLoadData();
+    }
+
+    /**
+     * reload the data
+     * */
+    public void reLoadData(){
+        userPresenter.load();
     }
 
     public View getView(){
@@ -91,10 +123,10 @@ public class LocalContactsTab implements ExpandableListView.OnChildClickListener
         int childPos = (Integer)view.getTag(R.id.child_id);
         if(childPos == -1){
             selectedGroupId = i;
+            Log.d("wnw", selectedGroupId+"");
             String groupName = groupList.get(i).getName();
             showUpdateGroupDialog(groupName);
         }else{
-            Log.d("wnw", "you long click the child");
         }
         return true;
     }
@@ -119,10 +151,10 @@ public class LocalContactsTab implements ExpandableListView.OnChildClickListener
                         if( updateGroupText.getText().toString().trim().equals("")){
                             updateGroupText.setHint("组名不能为空");
                             updateGroupText.setHintTextColor(Color.RED);
-                            Log.d("wnw1",updateGroupText.getText().toString());
                         }else{
                             //更新数据库，并且销毁Dialog
-                            updateGroupName(updateGroupText.getText().toString());
+                            int groupId = groupList.get(selectedGroupId).getId();
+                            updateGroupName(updateGroupText.getText().toString(), groupId);
                             updateGroupDialog.dismiss();
                         }
                     }
@@ -135,14 +167,5 @@ public class LocalContactsTab implements ExpandableListView.OnChildClickListener
         builder.setTitle("重命名对话框");
         updateGroupDialog = builder.create();
         updateGroupDialog.show();
-    }
-
-    /**
-     * update the name of group from db
-     * */
-    private void updateGroupName(String name){
-        int groupId = groupList.get(selectedGroupId).getId();
-        HomeFragment.updateGroupName(name, groupId);
-        HomeFragment.loadGroup();
     }
 }

@@ -1,4 +1,4 @@
-package com.wit.contacts.view;
+package com.wit.contacts.view.viewInterface;
 
 import com.wit.contacts.bean.Group;
 import com.wit.contacts.bean.User;
