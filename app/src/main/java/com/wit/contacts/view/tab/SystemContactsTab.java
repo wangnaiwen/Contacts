@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import com.wit.contacts.R;
 import com.wit.contacts.adapter.SortGroupMemberAdapter;
+import com.wit.contacts.bean.Group;
 import com.wit.contacts.bean.GroupMemberBean;
 import com.wit.contacts.bean.SystemContacts;
 import com.wit.contacts.presenter.SystemContactsPresenter;
@@ -71,7 +72,6 @@ public class SystemContactsTab implements ISystemContactsView, SwipeRefreshLayou
      */
     private CharacterParser characterParser;
     private List<GroupMemberBean> SourceDateList;
-
     /**
      * 根据拼音来排列ListView里面的数据类
      */
@@ -125,7 +125,6 @@ public class SystemContactsTab implements ISystemContactsView, SwipeRefreshLayou
                 if (position != -1) {
                     sortListView.setSelection(position);
                 }
-
             }
         });
 
@@ -157,7 +156,6 @@ public class SystemContactsTab implements ISystemContactsView, SwipeRefreshLayou
         });
         SourceDateList = new ArrayList<>();
         loadSystemContactsFromDatabase();
-        sortDataSource();
     }
 
     /**
@@ -241,17 +239,18 @@ public class SystemContactsTab implements ISystemContactsView, SwipeRefreshLayou
     /**
      * 为ListView填充数据
      *
-     * @param date
+     * @param dataList
      * @return
      */
-    private List<GroupMemberBean> filledData(String[] date) {
+    private List<GroupMemberBean> filledData(List<SystemContacts> dataList) {
         List<GroupMemberBean> mSortList = new ArrayList<GroupMemberBean>();
 
-        for (int i = 0; i < date.length; i++) {
+        for (int i = 0; i < dataList.size(); i++) {
             GroupMemberBean sortModel = new GroupMemberBean();
-            sortModel.setName(date[i]);
+            SystemContacts contacts = dataList.get(i);
+            sortModel.setSystemContacts(contacts);
             // 汉字转换成拼音
-            String pinyin = characterParser.getSelling(date[i]);
+            String pinyin = characterParser.getSelling(contacts.getName());
             String sortString = pinyin.substring(0, 1).toUpperCase();
 
             // 正则表达式，判断首字母是否是英文字母
@@ -281,7 +280,7 @@ public class SystemContactsTab implements ISystemContactsView, SwipeRefreshLayou
         } else {
             filterDateList.clear();
             for (GroupMemberBean sortModel : SourceDateList) {
-                String name = sortModel.getName();
+                String name = sortModel.getSystemContacts().getName();
                 if (name.indexOf(filterStr.toString()) != -1
                         || characterParser.getSelling(name).startsWith(
                         filterStr.toString())) {
@@ -323,7 +322,9 @@ public class SystemContactsTab implements ISystemContactsView, SwipeRefreshLayou
      */
     @Override
     public int getSectionForPosition(int i) {
-        return SourceDateList.get(i).getSortLetters().charAt(0);
+        GroupMemberBean bean = SourceDateList.get(i);
+        String a = bean.getSortLetters();
+        return a.charAt(0);
     }
 
     /**
@@ -344,6 +345,7 @@ public class SystemContactsTab implements ISystemContactsView, SwipeRefreshLayou
             mSystemContactsList = new ArrayList<>();
         }
         mSystemContactsList = contactses;
+        Log.d("wnw", contactses.size()+"");
         /*adapter.notifyDataSetChanged();*/
         loadSystemContacts();
     }
@@ -356,11 +358,12 @@ public class SystemContactsTab implements ISystemContactsView, SwipeRefreshLayou
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        SystemContacts contacts = new SystemContacts();
-        contacts = mSystemContactsList.get(i);
+
+        GroupMemberBean bean = (GroupMemberBean)adapter.getItem(i);
+        SystemContacts contacts = bean.getSystemContacts();
         Intent intent = new Intent(mContext, SystemContactsInfoActivity.class);
         intent.putExtra("id", contacts.getId());
-        intent.putExtra("name", contacts.getId());
+        intent.putExtra("name", contacts.getName());
         intent.putExtra("phone", contacts.getPhone());
         intent.putExtra("phonemore", contacts.getPhoneMore());
         intent.putExtra("email", contacts.getEmail());
@@ -377,15 +380,13 @@ public class SystemContactsTab implements ISystemContactsView, SwipeRefreshLayou
 
 
     private void loadSystemContacts(){
-        //mSystemContactsList = readContacts();
-        int length = mSystemContactsList.size();
-        String []list = new String[length];
-
-        for(int i = 0 ; i < length; i++){
-            list[i] = mSystemContactsList.get(i).getName();
-            //list.add(mSystemContactsList.get(i).getName()+"\n"+mSystemContactsList.get(i).getPhone());
+        SourceDateList = filledData(mSystemContactsList);
+        if(SourceDateList.size() != 0){
+            sortDataSource();
+            sideBar.setVisibility(View.VISIBLE);
+        }else {
+            sideBar.setVisibility(View.GONE);
         }
-        SourceDateList = filledData(list);
         //adapter = new ArrayAdapter<String>(mContext, android.R.layout.simple_list_item_1,contactsList);
     }
 
@@ -410,6 +411,7 @@ public class SystemContactsTab implements ISystemContactsView, SwipeRefreshLayou
         @Override
         protected List<SystemContacts> doInBackground(Void... voids) {
             mSystemContactsList = readContacts();  // to use the function of read contacts
+            insertSystemContacts();
             return mSystemContactsList;
         }
 
@@ -471,9 +473,8 @@ public class SystemContactsTab implements ISystemContactsView, SwipeRefreshLayou
             }
         }
         /**
-         * if read system contacts finish, and insert data to database in this thread
+         * if read system contacts finish, and insert data todatabase  in this thread
          * */
-        insertSystemContacts();
         return contactsList;
     }
 

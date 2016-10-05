@@ -76,9 +76,9 @@ public class SortGroupMemberAdapter extends BaseAdapter implements SectionIndexe
 			viewHolder.tvLetter.setVisibility(View.GONE);
 		}
 
-		viewHolder.tvName.setText(this.list.get(position).getName());
+		viewHolder.tvName.setText(this.list.get(position).getSystemContacts().getName());
 		viewHolder.tvImg.setBackgroundResource(userImgList[position%5]);
-		viewHolder.tvImg.setText(this.list.get(position).getName().substring(0,1));
+		viewHolder.tvImg.setText(this.list.get(position).getSystemContacts().getName().substring(0,1));
 		return view;
 
 	}

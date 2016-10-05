@@ -113,7 +113,7 @@ public class UserDetailInfoActivity  extends AppCompatActivity implements View.O
         /**
          * 如果有第二个号码，才会显示第二个号码的布局
          * */
-        if(mUser.getPhoneMore().isEmpty()){
+        if(mUser.getPhoneMore() == null || mUser.getPhoneMore().isEmpty()){
             phoneMoreLayout.setVisibility(View.GONE);
         }else {
             phoneMoreLayout.setVisibility(View.VISIBLE);

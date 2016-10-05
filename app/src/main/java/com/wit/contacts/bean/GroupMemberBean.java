@@ -2,15 +2,17 @@ package com.wit.contacts.bean;
 
 public class GroupMemberBean {
 
-	private String name;   //显示的数据
-	private String sortLetters;  //显示数据拼音的首字母
-	
-	public String getName() {
-		return name;
+	private SystemContacts systemContacts;  //显示的数据
+	private String sortLetters;             //显示数据拼音的首字母
+
+	public SystemContacts getSystemContacts() {
+		return systemContacts;
 	}
-	public void setName(String name) {
-		this.name = name;
+
+	public void setSystemContacts(SystemContacts systemContacts) {
+		this.systemContacts = systemContacts;
 	}
+
 	public String getSortLetters() {
 		return sortLetters;
 	}

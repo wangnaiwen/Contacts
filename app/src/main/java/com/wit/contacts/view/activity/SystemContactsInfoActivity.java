@@ -102,7 +102,7 @@ public class SystemContactsInfoActivity extends AppCompatActivity implements Vie
         /**
          * 如果emil为空,就不现实email的那个按钮了
          * */
-        if(mSystemContacts.getEmail().isEmpty()){
+        if(mSystemContacts.getEmail()== null || mSystemContacts.getEmail().isEmpty()){
             mEmail.setVisibility(View.GONE);
         }else{
             mEmail.setText(mSystemContacts.getEmail());
