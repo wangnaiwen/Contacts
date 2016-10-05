@@ -17,6 +17,13 @@ public class SortGroupMemberAdapter extends BaseAdapter implements SectionIndexe
 	private List<GroupMemberBean> list = null;
 	private Context mContext;
 
+	public static int userImgList[] = {R.drawable.user_img_1,
+			R.drawable.user_img_2,
+			R.drawable.user_img_3,
+			R.drawable.user_img_4,
+			R.drawable.user_img_5
+	};
+
 	public SortGroupMemberAdapter(Context mContext, List<GroupMemberBean> list) {
 		this.mContext = mContext;
 		this.list = list;
@@ -49,8 +56,9 @@ public class SortGroupMemberAdapter extends BaseAdapter implements SectionIndexe
 		final GroupMemberBean mContent = list.get(position);
 		if (view == null) {
 			viewHolder = new ViewHolder();
-			view = LayoutInflater.from(mContext).inflate(R.layout.activity_group_member_item, null);
-			viewHolder.tvTitle = (TextView) view.findViewById(R.id.title);
+			view = LayoutInflater.from(mContext).inflate(R.layout.system_contacts_item, null);
+			viewHolder.tvName = (TextView) view.findViewById(R.id.item_system_contacts_name);
+			viewHolder.tvImg = (TextView)view.findViewById(R.id.item_system_contacts_img);
 			viewHolder.tvLetter = (TextView) view.findViewById(R.id.catalog);
 			view.setTag(viewHolder);
 		} else {
@@ -68,15 +76,17 @@ public class SortGroupMemberAdapter extends BaseAdapter implements SectionIndexe
 			viewHolder.tvLetter.setVisibility(View.GONE);
 		}
 
-		viewHolder.tvTitle.setText(this.list.get(position).getName());
-
+		viewHolder.tvName.setText(this.list.get(position).getName());
+		viewHolder.tvImg.setBackgroundResource(userImgList[position%5]);
+		viewHolder.tvImg.setText(this.list.get(position).getName().substring(0,1));
 		return view;
 
 	}
 
 	final static class ViewHolder {
 		TextView tvLetter;
-		TextView tvTitle;
+		TextView tvName;
+		TextView tvImg;
 	}
 
 	/**

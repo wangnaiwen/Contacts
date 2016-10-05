@@ -11,6 +11,7 @@ import com.wit.contacts.R;
 import com.wit.contacts.bean.Group;
 
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by wnw on 2016/9/7.
@@ -22,9 +23,7 @@ public class UserAdapter extends BaseExpandableListAdapter{
             R.drawable.user_img_2,
             R.drawable.user_img_3,
             R.drawable.user_img_4,
-            R.drawable.user_img_5,
-            R.drawable.user_img_6,
-            R.drawable.user_img_7
+            R.drawable.user_img_5
     };
 
     private List<Group> mUserList;
@@ -84,7 +83,7 @@ public class UserAdapter extends BaseExpandableListAdapter{
         }else {
             childHolder = (ChildHolder)view.getTag();
         }
-        childHolder.userImg.setBackgroundResource(userImgList[(int)Math.random()*6]);
+        childHolder.userImg.setBackgroundResource(userImgList[i1%5]);
         childHolder.userImg.setText(mUserList.get(i).getUserList().get(i1).getName().substring(0,1));
         childHolder.userNameText.setText(mUserList.get(i).getUserList().get(i1).getName());
         return view;

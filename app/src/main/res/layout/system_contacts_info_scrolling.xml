@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.wit.contacts.view.activity.UserDetailInfoActivity"
-    tools:showIn="@layout/activity_user_detail">
+    tools:showIn="@layout/activity_system_contacts_detail">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -16,7 +16,7 @@
             android:orientation="horizontal"
             android:layout_height="55dp">
             <Button
-                android:id="@+id/btn_dial"
+                android:id="@+id/btn_dial_system_contacts"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="match_parent"
@@ -26,7 +26,7 @@
                 android:layout_centerHorizontal="true"
                 android:gravity="center_vertical"/>
             <ImageView
-                android:id="@+id/icon_send_msg"
+                android:id="@+id/icon_send_msg_system_contacts"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_marginRight="15dp"
@@ -39,9 +39,9 @@
             android:layout_width="match_parent"
             android:orientation="horizontal"
             android:layout_height="55dp"
-            android:id="@+id/phone_more_layout">
+            android:id="@+id/phone_more_layout_system_contacts">
             <Button
-                android:id="@+id/btn_phone_more"
+                android:id="@+id/btn_phone_more_system_contacts"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="match_parent"
@@ -51,7 +51,7 @@
                 android:layout_centerHorizontal="true"
                 android:gravity="center_vertical"/>
             <ImageView
-                android:id="@+id/icon_send_msg_more"
+                android:id="@+id/icon_send_msg_more_system_contacts"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_marginRight="15dp"
@@ -65,7 +65,7 @@
             android:layout_height="0.3dp"
             android:background="#FFF5F4F4"/>
         <Button
-            android:id="@+id/edit_email"
+            android:id="@+id/edit_email_system_contacts"
             android:layout_width="match_parent"
             android:layout_height="55dp"
             android:background="@drawable/btn_bg_selector"
@@ -79,11 +79,11 @@
             android:background="#FFF5F4F4"/>
 
         <Button
-            android:id="@+id/edit_contact"
+            android:id="@+id/add_contacts_to_local"
             android:layout_width="match_parent"
             android:layout_height="55dp"
             android:paddingLeft="20dp"
-            android:text="编辑联系人"
+            android:text="添加到本地"
             android:textSize="16sp"
             android:gravity="center_vertical"
             android:background="@drawable/btn_bg_selector"/>
@@ -94,7 +94,7 @@
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"/>
         <Button
-            android:id="@+id/shape_contact"
+            android:id="@+id/shape_contact_system_contacts"
             android:layout_width="match_parent"
             android:layout_height="55dp"
             android:paddingLeft="20dp"
@@ -109,26 +109,11 @@
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"/>
         <Button
-            android:id="@+id/add_contact_blacklist"
+            android:id="@+id/add_contact_blacklist_system_contacts"
             android:layout_width="match_parent"
             android:layout_height="55dp"
             android:paddingLeft="20dp"
             android:text="加入黑名单"
-            android:textSize="16sp"
-            android:gravity="center_vertical"
-            android:background="@drawable/btn_bg_selector"/>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="0.3dp"
-            android:background="#FFF5F4F4"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"/>
-        <Button
-            android:id="@+id/delete_contact"
-            android:layout_width="match_parent"
-            android:layout_height="55dp"
-            android:paddingLeft="20dp"
-            android:text="删除联系人"
             android:textSize="16sp"
             android:gravity="center_vertical"
             android:background="@drawable/btn_bg_selector"/>

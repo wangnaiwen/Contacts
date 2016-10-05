@@ -34,10 +34,18 @@ public class UserDetailInfoActivity  extends AppCompatActivity implements View.O
     private Toolbar mToolbar;
     private Button mDialContact;
     private ImageView mSendMsg;
+    private Button mEmail;
     private Button mEditContact;
     private Button mShapeContact;
     private Button mAddBlackList;
     private Button mDeleteContact;
+
+    /**
+     * 如果有两个号码,才会显示的第二个号码的布局
+     * */
+    private LinearLayout phoneMoreLayout;
+    private Button phoneMoreBtn;
+    private ImageView phoneMoreSms;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +71,7 @@ public class UserDetailInfoActivity  extends AppCompatActivity implements View.O
     }
 
     private void initView(){
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar_user_info);
         mToolbar.setTitle(mUser.getName());
         setSupportActionBar(mToolbar);
 
@@ -72,6 +80,7 @@ public class UserDetailInfoActivity  extends AppCompatActivity implements View.O
         mDialContact.setText(mUser.getPhone());
 
         mSendMsg = (ImageView)findViewById(R.id.icon_send_msg);
+        mEmail = (Button)findViewById(R.id.edit_email);
         mEditContact = (Button)findViewById(R.id.edit_contact);
         mShapeContact = (Button)findViewById(R.id.shape_contact);
         mAddBlackList = (Button)findViewById(R.id.add_contact_blacklist);
@@ -79,10 +88,37 @@ public class UserDetailInfoActivity  extends AppCompatActivity implements View.O
 
         mDialContact.setOnClickListener(this);
         mSendMsg.setOnClickListener(this);
+        mEmail.setOnClickListener(this);
         mEditContact.setOnClickListener(this);
         mShapeContact.setOnClickListener(this);
         mAddBlackList.setOnClickListener(this);
         mDeleteContact.setOnClickListener(this);
+
+        /**
+         * 如果emil为空,就不现实email的那个按钮了
+         * */
+        if(mUser.getEmail().isEmpty()){
+            mEmail.setVisibility(View.GONE);
+        }else{
+            mEmail.setText(mUser.getEmail());
+        }
+
+        phoneMoreLayout = (LinearLayout)findViewById(R.id.phone_more_layout);
+        phoneMoreBtn = (Button)findViewById(R.id.btn_phone_more);
+        phoneMoreSms = (ImageView)findViewById(R.id.icon_send_msg_more);
+
+        phoneMoreBtn.setOnClickListener(this);
+        phoneMoreSms.setOnClickListener(this);
+
+        /**
+         * 如果有第二个号码，才会显示第二个号码的布局
+         * */
+        if(mUser.getPhoneMore().isEmpty()){
+            phoneMoreLayout.setVisibility(View.GONE);
+        }else {
+            phoneMoreLayout.setVisibility(View.VISIBLE);
+            phoneMoreBtn.setText(mUser.getPhoneMore());
+        }
     }
 
     @Override
@@ -97,7 +133,22 @@ public class UserDetailInfoActivity  extends AppCompatActivity implements View.O
                 //跳转到发送短信页面
                 Uri smsToUri = Uri.parse("smsto://"+mUser.getPhone());
                 Intent mIntent = new Intent( android.content.Intent.ACTION_SENDTO, smsToUri );
-                startActivity( mIntent );
+                startActivity(mIntent);
+                break;
+            case R.id.btn_phone_more:
+                Intent intent2 = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:"+mUser.getPhoneMore()));
+                intent2.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent2);
+                break;
+            case R.id.icon_send_msg_more:
+                Uri smsToUri1 = Uri.parse("smsto://"+mUser.getPhoneMore());
+                Intent mIntent1 = new Intent( android.content.Intent.ACTION_SENDTO, smsToUri1);
+                startActivity(mIntent1);
+                break;
+            case R.id.edit_email:
+                Uri uri = Uri.parse("mailto:"+mUser.getEmail());
+                Intent intent1 = new Intent(Intent.ACTION_SENDTO, uri);
+                startActivity(intent1);
                 break;
             case R.id.edit_contact:
                 editContact();
@@ -147,6 +198,25 @@ public class UserDetailInfoActivity  extends AppCompatActivity implements View.O
 
                 mToolbar.setTitle(mUser.getName());
                 mDialContact.setText(mUser.getPhone());
+                /**
+                 * 如果email为空，就不现实email按钮，如果不为空，就显示
+                 * */
+                if(mUser.getEmail().isEmpty()){
+                    mEmail.setVisibility(View.GONE);
+                }else {
+                    mEmail.setVisibility(View.VISIBLE);
+                    mEmail.setText(mUser.getEmail());
+                }
+
+                /**
+                 * 如果有第二个号码，才会显示第二个号码的布局
+                 * */
+                if(mUser.getPhoneMore().isEmpty()){
+                    phoneMoreLayout.setVisibility(View.GONE);
+                }else {
+                    phoneMoreLayout.setVisibility(View.VISIBLE);
+                    phoneMoreBtn.setText(mUser.getPhoneMore());
+                }
             }
         }else {
 

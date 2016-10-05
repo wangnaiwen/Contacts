@@ -114,7 +114,7 @@ public class HomeFragment extends Fragment{
             mView = inflater.inflate(R.layout.fragment_home, container, false);
         }
 
-        Toolbar toolbar = (Toolbar)mView.findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar)mView.findViewById(R.id.toolbar_home);
         ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
 
         initView();

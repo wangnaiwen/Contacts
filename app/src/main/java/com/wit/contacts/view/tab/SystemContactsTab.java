@@ -1,6 +1,7 @@
 package com.wit.contacts.view.tab;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -28,6 +29,7 @@ import com.wit.contacts.bean.SystemContacts;
 import com.wit.contacts.presenter.SystemContactsPresenter;
 import com.wit.contacts.util.CharacterParser;
 import com.wit.contacts.util.PinyinComparator;
+import com.wit.contacts.view.activity.SystemContactsInfoActivity;
 import com.wit.contacts.view.custom.ClearEditText;
 import com.wit.contacts.view.custom.SideBar;
 import com.wit.contacts.view.viewInterface.ISystemContactsView;
@@ -95,7 +97,7 @@ public class SystemContactsTab implements ISystemContactsView, SwipeRefreshLayou
     private void initView(){
         mSwipeLayout = (SwipeRefreshLayout)mView.findViewById(R.id.swipe_layout);
         //mListView = (ListView)mView.findViewById(R.id.lv_system_contacts);
-        sortListView = (ListView)mView.findViewById(R.id.country_lvcountry);
+        sortListView = (ListView)mView.findViewById(R.id.lv_system_contacts);
         titleLayout = (LinearLayout)mView.findViewById(R.id.title_layout);
         title = (TextView)mView.findViewById(R.id.title_layout_catalog);
         tvNofriends = (TextView) mView.findViewById(R.id.title_layout_no_friends);
@@ -126,26 +128,6 @@ public class SystemContactsTab implements ISystemContactsView, SwipeRefreshLayou
 
             }
         });
-
-        //处理ListView和SwipeRefreshLayout的滑动冲突事件
-        /*sortListView.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView absListView, int i) {
-
-            }
-
-            @Override
-            public void onScroll(AbsListView absListView, int i, int i1, int i2) {
-                View firstView = absListView.getChildAt(i);
-
-                // 当firstVisibleItem是第0位。如果firstView==null说明列表为空，需要刷新;或者top==0说明已经到达列表顶部, 也需要刷新
-                if (i == 0 && (firstView == null || firstView.getTop() == 0)) {
-                    mSwipeLayout.setEnabled(true);
-                } else {
-                    mSwipeLayout.setEnabled(false);
-                }
-            }
-        });*/
 
         // 根据输入框输入值的改变来过滤搜索
         mClearEditText.addTextChangedListener(new TextWatcher() {
@@ -189,6 +171,22 @@ public class SystemContactsTab implements ISystemContactsView, SwipeRefreshLayou
         sortListView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
+                /**
+                 * 当连续滑动ListView的时候，就隐藏搜索框
+                 * */
+                switch (scrollState){
+                    case AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
+                        //接触屏幕
+                        break;
+                    case AbsListView.OnScrollListener.SCROLL_STATE_FLING:
+                        //开始滚动
+                        mClearEditText.setVisibility(View.GONE);
+                        break;
+                    case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
+                        mClearEditText.setVisibility(View.VISIBLE);
+                        //结束滚动
+                        break;
+                }
             }
 
             @Override
@@ -226,6 +224,9 @@ public class SystemContactsTab implements ISystemContactsView, SwipeRefreshLayou
                 }
                 lastFirstVisibleItem = firstVisibleItem;
 
+                /**
+                 * 处理滑动的时候ListView和SwipeLayout的冲突
+                 * */
                 View firstView = view.getChildAt(firstVisibleItem);
                 // 当firstVisibleItem是第0位。如果firstView==null说明列表为空，需要刷新;或者top==0说明已经到达列表顶部, 也需要刷新
                 if (firstVisibleItem == 0 && (firstView == null || firstView.getTop() == 0)) {
@@ -323,7 +324,6 @@ public class SystemContactsTab implements ISystemContactsView, SwipeRefreshLayou
     @Override
     public int getSectionForPosition(int i) {
         return SourceDateList.get(i).getSortLetters().charAt(0);
-
     }
 
     /**
@@ -356,7 +356,16 @@ public class SystemContactsTab implements ISystemContactsView, SwipeRefreshLayou
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        SystemContacts contacts = new SystemContacts();
+        contacts = mSystemContactsList.get(i);
+        Intent intent = new Intent(mContext, SystemContactsInfoActivity.class);
+        intent.putExtra("id", contacts.getId());
+        intent.putExtra("name", contacts.getId());
+        intent.putExtra("phone", contacts.getPhone());
+        intent.putExtra("phonemore", contacts.getPhoneMore());
+        intent.putExtra("email", contacts.getEmail());
 
+        mContext.startActivity(intent);
     }
 
     /**
@@ -365,6 +374,7 @@ public class SystemContactsTab implements ISystemContactsView, SwipeRefreshLayou
     public View getView(){
         return mView;
     }
+
 
     private void loadSystemContacts(){
         //mSystemContactsList = readContacts();
@@ -422,7 +432,6 @@ public class SystemContactsTab implements ISystemContactsView, SwipeRefreshLayou
         List<SystemContacts> contactsList = new ArrayList<>();
         Cursor cursor = null;
         try {
-
             //查询联系人数据
             Uri uri = ContactsContract.Contacts.CONTENT_URI;
             cursor = mContext.getContentResolver().query(uri, null, null, null, null);

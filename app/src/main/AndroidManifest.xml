@@ -24,6 +24,7 @@
         <activity android:name=".view.activity.UserDetailInfoActivity" android:theme="@style/AppTheme.NoActionBar"/>
 
         <activity android:name=".view.activity.EditContactActivity"/>
+        <activity android:name=".view.activity.SystemContactsInfoActivity" android:theme="@style/AppTheme.NoActionBar"/>
     </application>
     <uses-permission android:name="android.permission.READ_CONTACTS"/>
 </manifest>

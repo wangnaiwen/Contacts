@@ -8,5 +8,10 @@
     <color name="color_white">#ffff</color>
     <color name="color_parent_text">#0199d6</color>
     <color name="item_pressed_bg">#88c2c1c1</color>
-    
+
+    <color name="color_item1">#4FA4F2</color>
+    <color name="color_item2">#3CE091</color>
+    <color name="color_item3">#FDA244</color>
+    <color name="color_item4">#F577C3</color>
+    <color name="color_item5">#FD7973</color>
 </resources>

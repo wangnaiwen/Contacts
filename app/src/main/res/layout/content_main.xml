@@ -20,7 +20,7 @@
         android:layout_height="0.3dp"
         android:background="#a9828786"
         android:layout_above="@+id/bottom_bar"
-        android:layout_marginBottom="10dp"/>
+        android:layout_marginBottom="5dp"/>
     <include
         android:id="@+id/bottom_bar"
         layout="@layout/bottom_bar" />
