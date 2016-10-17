@@ -1,5 +1,7 @@
 package com.wit.contacts.model;
 
+import android.content.Context;
+
 import com.wit.contacts.bean.Group;
 import com.wit.contacts.bean.NetUser;
 
@@ -13,7 +15,7 @@ public interface ILoginModel {
     /**
      * 加载数据
      * */
-    void loadNetUser(NetUser netUser,ILoginModel.NetUserLoadingListener loadingListener);
+    void loadNetUser(Context context, NetUser netUser, ILoginModel.NetUserLoadingListener loadingListener);
 
     /**
      * 加载数据完成的回调

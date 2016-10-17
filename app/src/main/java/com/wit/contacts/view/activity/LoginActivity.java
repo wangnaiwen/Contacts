@@ -55,7 +55,7 @@ public class LoginActivity extends MvpBaseActivity<ILoginView, LoginPresenter>  
                     //验证密码
                     netUser.setPhone(phone.getText().toString().trim());
                     netUser.setPassword(password.getText().toString().trim());
-                    mPresenter.validate(netUser);   //开始获得数据
+                    mPresenter.validate(this, netUser);   //开始获得数据
                 }
                 break;
             case R.id.login_new_user:
@@ -83,7 +83,7 @@ public class LoginActivity extends MvpBaseActivity<ILoginView, LoginPresenter>  
     public void validate(NetUser netUser) {
         //在这里得到返回的数据
         if(netUser == null){
-            Toast.makeText(this, "空", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "手机或密码错误", Toast.LENGTH_SHORT).show();
         }else {
             Toast.makeText(this, netUser.getEmail(), Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(this, MainActivity.class);

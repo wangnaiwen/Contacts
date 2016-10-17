@@ -30,4 +30,5 @@
         <activity android:name=".view.activity.RegisterActivity"/>
     </application>
     <uses-permission android:name="android.permission.READ_CONTACTS"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
 </manifest>
