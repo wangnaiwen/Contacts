@@ -95,6 +95,6 @@ public class LoginActivity extends MvpBaseActivity<ILoginView, LoginPresenter>  
     @Override
     public void showDialog() {
         //在这里显示进度条
-        Toast.makeText(this, "正在拼命加载中", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "正在拼命登录中", Toast.LENGTH_SHORT).show();
     }
 }
