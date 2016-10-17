@@ -1,12 +1,12 @@
-/*
+
 package com.wit.contacts.presenter;
 
 import java.lang.ref.WeakReference;
 
-*/
+
 /**
  * Created by wnw on 2016/9/7.
- *//*
+ */
 
 
 public abstract class BasePresenter<T>  {
@@ -31,4 +31,4 @@ public abstract class BasePresenter<T>  {
         return mWeakReference.get();
     }
 }
-*/
+
