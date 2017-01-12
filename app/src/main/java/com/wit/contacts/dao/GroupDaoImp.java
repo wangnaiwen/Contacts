@@ -27,8 +27,15 @@ public class GroupDaoImp implements GroupDao{
     @Override
     public void insertGroup(Group group) {
         mDatabase.beginTransaction();
-        String sql = "insert into contact_group values(?,?)";
-        Object object[] = new Object[]{null, group.getName()};
+        Cursor cursor = mDatabase.query("user",null,null,null, null, null,null);
+        int userId =1;
+        if(cursor.moveToFirst()){
+            userId = cursor.getInt(cursor.getColumnIndex("id"));
+        }
+        cursor.close();
+
+        String sql = "insert into contact_group values(?,?,?)";
+        Object object[] = new Object[]{null, group.getName(),userId};
         try{
             mDatabase.execSQL(sql,object);
             mDatabase.setTransactionSuccessful();   //set successful and insert to db
@@ -172,5 +179,27 @@ public class GroupDaoImp implements GroupDao{
         }finally {
             mDatabase.endTransaction();
         }
+    }
+
+    @Override
+    public int SelectFinalGroupId() {
+        mDatabase.beginTransaction();
+        Group group = new Group();
+        try{
+            Cursor cursor = mDatabase.query("contact_group",null, null, null, null, null, null);
+            if (cursor.moveToFirst()){
+                do{
+                    group.setId(cursor.getInt(cursor.getColumnIndex("id")));
+                    group.setName(cursor.getString(cursor.getColumnIndex("name")));
+                }while (cursor.moveToNext());
+            }
+            cursor.close();
+            mDatabase.setTransactionSuccessful();   //set successful and insert to db
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            mDatabase.endTransaction();
+        }
+        return group.getId();
     }
 }

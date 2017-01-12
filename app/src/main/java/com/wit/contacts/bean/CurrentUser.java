@@ -1,12 +1,10 @@
 package com.wit.contacts.bean;
 
-import java.io.Serializable;
-
 /**
- * Created by wnw on 2016/10/17.
+ * Created by wnw on 2017/1/1.
  */
 
-public class NetUser implements Serializable{
+public class CurrentUser {
     private Integer id;
     private String name;
     private String phone;
@@ -14,33 +12,8 @@ public class NetUser implements Serializable{
     private String email;
     private String password;
 
-    // Constructors
-
-    /** default constructor */
-    public NetUser() {
-    }
-
-    /** minimal constructor */
-    public NetUser(String name, String phone, String password) {
-        this.name = name;
-        this.phone = phone;
-        this.password = password;
-    }
-
-    /** full constructor */
-    public NetUser(String name, String phone, String phone2, String email,
-                   String password) {
-        this.name = name;
-        this.phone = phone;
-        this.phone2 = phone2;
-        this.email = email;
-        this.password = password;
-    }
-
-    // Property accessors
-
     public Integer getId() {
-        return this.id;
+        return id;
     }
 
     public void setId(Integer id) {
@@ -48,7 +21,7 @@ public class NetUser implements Serializable{
     }
 
     public String getName() {
-        return this.name;
+        return name;
     }
 
     public void setName(String name) {
@@ -56,7 +29,7 @@ public class NetUser implements Serializable{
     }
 
     public String getPhone() {
-        return this.phone;
+        return phone;
     }
 
     public void setPhone(String phone) {
@@ -64,7 +37,7 @@ public class NetUser implements Serializable{
     }
 
     public String getPhone2() {
-        return this.phone2;
+        return phone2;
     }
 
     public void setPhone2(String phone2) {
@@ -72,7 +45,7 @@ public class NetUser implements Serializable{
     }
 
     public String getEmail() {
-        return this.email;
+        return email;
     }
 
     public void setEmail(String email) {
@@ -80,7 +53,7 @@ public class NetUser implements Serializable{
     }
 
     public String getPassword() {
-        return this.password;
+        return password;
     }
 
     public void setPassword(String password) {

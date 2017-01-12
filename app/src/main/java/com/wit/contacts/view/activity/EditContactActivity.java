@@ -120,6 +120,7 @@ public class EditContactActivity extends Activity implements View.OnClickListene
         switch (view.getId()){
             case R.id.back_arrow_edit:
                 finish();
+                overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right);
                 break;
             case R.id.finish_edit:
                 if(userName.getText().toString().isEmpty()){
@@ -153,6 +154,7 @@ public class EditContactActivity extends Activity implements View.OnClickListene
                     intent.putExtra("groupId", user.getGroupId());
                     setResult(RESULT_OK, intent);
                     finish();
+                    overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right);
                 }
                 break;
             case R.id.contact_group_edit:
@@ -188,5 +190,10 @@ public class EditContactActivity extends Activity implements View.OnClickListene
         myDialog = new AlertDialog.Builder(this).create();
         myDialog.setView(linearLayout);
         myDialog.show();
+    }
+    @Override
+    public void onBackPressed() {
+        finish();
+        overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right);
     }
 }

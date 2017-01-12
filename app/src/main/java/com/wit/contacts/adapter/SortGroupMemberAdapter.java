@@ -29,11 +29,6 @@ public class SortGroupMemberAdapter extends BaseAdapter implements SectionIndexe
 		this.list = list;
 	}
 
-	/**
-	 * 当ListView数据发生变化时,调用此方法来更新ListView
-	 * 
-	 * @param list
-	 */
 	public void updateListView(List<GroupMemberBean> list) {
 		this.list = list;
 		notifyDataSetChanged();
@@ -107,16 +102,9 @@ public class SortGroupMemberAdapter extends BaseAdapter implements SectionIndexe
 				return i;
 			}
 		}
-
 		return -1;
 	}
 
-	/**
-	 * 提取英文的首字母，非英文字母用#代替。
-	 * 
-	 * @param str
-	 * @return
-	 */
 	private String getAlpha(String str) {
 		String sortStr = str.trim().substring(0, 1).toUpperCase();
 		// 正则表达式，判断首字母是否是英文字母

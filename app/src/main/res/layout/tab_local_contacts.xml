@@ -3,6 +3,13 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+    <TextView
+        android:id="@+id/hint_text_local"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="1.右上角添加分组和联系人\n\n 2.先添加分组后添加个人"
+        android:layout_gravity="center"
+        android:gravity="center"/>
     <ExpandableListView
         android:id="@+id/user_list"
         android:layout_width="match_parent"

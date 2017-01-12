@@ -1,5 +1,6 @@
 package com.wit.contacts.view.tab;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
+import android.widget.TextView;
 
 import com.wit.contacts.R;
 import com.wit.contacts.adapter.UserAdapter;
@@ -33,6 +35,8 @@ public class LocalContactsTab implements ExpandableListView.OnChildClickListener
     private ExpandableListView mExpandableListView;
     private Context mContext;
 
+    private TextView hintText;
+
     private UserPresenter userPresenter;
     private UserAdapter mUserAdapter;
 
@@ -47,6 +51,7 @@ public class LocalContactsTab implements ExpandableListView.OnChildClickListener
 
     private void initView(){
         mExpandableListView = (ExpandableListView)mView.findViewById(R.id.user_list);
+        hintText = (TextView)mView.findViewById(R.id.hint_text_local);
         mExpandableListView.setOnChildClickListener(this);
         mExpandableListView.setOnItemLongClickListener(this);
         userPresenter = new UserPresenter(this);
@@ -65,6 +70,12 @@ public class LocalContactsTab implements ExpandableListView.OnChildClickListener
             mUserAdapter  = new UserAdapter(mContext, groupList);
             mExpandableListView.setAdapter(mUserAdapter);
         }
+
+        if(groupList.size() == 0){
+            hintText.setVisibility(View.VISIBLE);
+        }else {
+            hintText.setVisibility(View.GONE);
+        }
         mUserAdapter.setDatas(groupList);
         mUserAdapter.notifyDataSetChanged();
     }
@@ -75,6 +86,7 @@ public class LocalContactsTab implements ExpandableListView.OnChildClickListener
         userPresenter.insertGroup(groupName);
         userPresenter.load();
     }
+
 
     /**
      * update group name
@@ -108,6 +120,7 @@ public class LocalContactsTab implements ExpandableListView.OnChildClickListener
         intent.putExtra("position", user.getPosition());
         intent.putExtra("groupId", user.getGroupId());
         mContext.startActivity(intent);
+        ((Activity)mContext).overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         return true;
     }
 

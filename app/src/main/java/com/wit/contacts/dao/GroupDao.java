@@ -16,4 +16,5 @@ public interface GroupDao {
     List<Group> selectAllGroup();
     String selectGroupNameById(int id);
     void updateGroupName(String name, int id);
+    int SelectFinalGroupId();
 }

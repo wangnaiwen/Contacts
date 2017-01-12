@@ -2,6 +2,7 @@ package com.wit.contacts.presenter;
 
 import android.content.Context;
 
+import com.wit.contacts.bean.CurrentUser;
 import com.wit.contacts.bean.NetUser;
 import com.wit.contacts.model.ILoginModel;
 import com.wit.contacts.model.LoginModelImp;

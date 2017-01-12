@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.wit.contacts.R;
 import com.wit.contacts.bean.Group;
@@ -82,6 +83,7 @@ public class AddContactsActivity extends Activity implements View.OnClickListene
         switch (view.getId()){
             case R.id.back_arrow:
                 finish();
+                overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right);
                 break;
             case R.id.finish_input:
                 if(userName.getText().toString().isEmpty()){
@@ -92,6 +94,7 @@ public class AddContactsActivity extends Activity implements View.OnClickListene
                     userPhone.setHintTextColor(Color.RED);
                 }else if(mCurrentGroup == null){
                     //将数据插入数据库
+                    Toast.makeText(this, "请选择分组", Toast.LENGTH_SHORT).show();
                     userGroup.setHint("请选择分组");
                     userGroup.setHintTextColor(Color.RED);
                 }else {
@@ -103,8 +106,8 @@ public class AddContactsActivity extends Activity implements View.OnClickListene
                     user.setPosition(userPosition.getText().toString());
                     user.setGroupId(mCurrentGroupId);
                     userDao.insertUser(user);
-                    Log.d("wnw", "you come here?");
                     finish();
+                    overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right);
                 }
                 break;
             case R.id.pick_group_name:
@@ -114,6 +117,12 @@ public class AddContactsActivity extends Activity implements View.OnClickListene
             default:
                 break;
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
     }
 
     private void showDialog(){
@@ -140,5 +149,10 @@ public class AddContactsActivity extends Activity implements View.OnClickListene
         myDialog = new AlertDialog.Builder(this).create();
         myDialog.setView(linearLayout);
         myDialog.show();
+    }
+    @Override
+    public void onBackPressed() {
+        finish();
+        overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right);
     }
 }

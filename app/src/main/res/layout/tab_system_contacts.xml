@@ -23,6 +23,13 @@
             android:hint="搜索"
             android:singleLine="true"
             android:textSize="14sp" />
+        <TextView
+            android:id="@+id/hint_text_system_contacts"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="下拉更新系统联系人"
+            android:layout_gravity="center"
+            android:gravity="center"/>
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent" >

@@ -15,7 +15,6 @@ import java.util.List;
  */
 public class UserModelImp implements IUserModel {
 
-
     private GroupDao groupDao ;
     private UserDao userDao ;
 

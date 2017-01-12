@@ -2,8 +2,6 @@ package com.wit.contacts.dao;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-
-import com.wit.contacts.bean.Group;
 import com.wit.contacts.bean.SystemContacts;
 import com.wit.contacts.data.ContactDatabaseHelper;
 

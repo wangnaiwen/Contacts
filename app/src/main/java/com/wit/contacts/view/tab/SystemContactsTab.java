@@ -1,5 +1,6 @@
 package com.wit.contacts.view.tab;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -49,6 +50,7 @@ public class SystemContactsTab implements ISystemContactsView, SwipeRefreshLayou
     private View mView;
     private LayoutInflater mInflater;
     private Context mContext;
+    private TextView hintText;
 
     private SwipeRefreshLayout mSwipeLayout;
     //private ListView mListView;
@@ -110,6 +112,8 @@ public class SystemContactsTab implements ISystemContactsView, SwipeRefreshLayou
         dialog = (TextView)mView. findViewById(R.id.dialog);
         sideBar.setTextView(dialog);
         mClearEditText = (ClearEditText) mView.findViewById(R.id.filter_edit);
+
+        hintText = (TextView)mView.findViewById(R.id.hint_text_system_contacts);
 
         mSwipeLayout.setOnRefreshListener(this);
         mSwipeLayout.setColorSchemeResources(android.R.color.holo_blue_light, android.R.color.holo_red_light, android.R.color.holo_orange_light, android.R.color.holo_green_light);
@@ -178,10 +182,10 @@ public class SystemContactsTab implements ISystemContactsView, SwipeRefreshLayou
                         break;
                     case AbsListView.OnScrollListener.SCROLL_STATE_FLING:
                         //开始滚动
-                        mClearEditText.setVisibility(View.GONE);
+                        //mClearEditText.setVisibility(View.GONE);
                         break;
                     case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
-                        mClearEditText.setVisibility(View.VISIBLE);
+                        //mClearEditText.setVisibility(View.VISIBLE);
                         //结束滚动
                         break;
                 }
@@ -367,8 +371,8 @@ public class SystemContactsTab implements ISystemContactsView, SwipeRefreshLayou
         intent.putExtra("phone", contacts.getPhone());
         intent.putExtra("phonemore", contacts.getPhoneMore());
         intent.putExtra("email", contacts.getEmail());
-
         mContext.startActivity(intent);
+        ((Activity)mContext).overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
 
     /**
@@ -384,8 +388,10 @@ public class SystemContactsTab implements ISystemContactsView, SwipeRefreshLayou
         if(SourceDateList.size() != 0){
             sortDataSource();
             sideBar.setVisibility(View.VISIBLE);
+            hintText.setVisibility(View.GONE);
         }else {
             sideBar.setVisibility(View.GONE);
+            hintText.setVisibility(View.VISIBLE);
         }
         //adapter = new ArrayAdapter<String>(mContext, android.R.layout.simple_list_item_1,contactsList);
     }

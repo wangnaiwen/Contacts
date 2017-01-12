@@ -42,6 +42,7 @@ public class ContactDatabaseHelper extends SQLiteOpenHelper {
     }
 
     public void onCreate(SQLiteDatabase sqLiteDatabase){
+        sqLiteDatabase.execSQL(Sql.USER);
         sqLiteDatabase.execSQL(Sql.CREATE_GROUP);
         sqLiteDatabase.execSQL(Sql.CREATE_USER);
         sqLiteDatabase.execSQL(Sql.CREATE_BLACKLIST);

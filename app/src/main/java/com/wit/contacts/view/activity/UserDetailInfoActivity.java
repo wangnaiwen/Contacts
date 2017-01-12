@@ -97,7 +97,7 @@ public class UserDetailInfoActivity  extends AppCompatActivity implements View.O
         /**
          * 如果emil为空,就不现实email的那个按钮了
          * */
-        if(mUser.getEmail().isEmpty()){
+        if(mUser.getEmail() == null || mUser.getEmail().isEmpty()){
             mEmail.setVisibility(View.GONE);
         }else{
             mEmail.setText(mUser.getEmail());
@@ -181,6 +181,7 @@ public class UserDetailInfoActivity  extends AppCompatActivity implements View.O
         intent.putExtra("position", mUser.getPosition());
         intent.putExtra("groupId", mUser.getGroupId());
         startActivityForResult(intent, REQUEST_CODE);
+        overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left);
     }
 
     @Override
@@ -291,5 +292,10 @@ public class UserDetailInfoActivity  extends AppCompatActivity implements View.O
         blackList.setPhoneMore(mUser.getPhoneMore());
         blackList.setEmail(mUser.getEmail());
         blackList.setPosition(mUser.getPosition());
+    }
+    @Override
+    public void onBackPressed() {
+        finish();
+        overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right);
     }
 }

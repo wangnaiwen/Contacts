@@ -4,211 +4,261 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-
-import android.util.Log;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.Window;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
+import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.wit.contacts.R;
-import com.wit.contacts.bean.Group;
-import com.wit.contacts.dao.GroupDao;
-import com.wit.contacts.dao.GroupDaoImp;
+import com.wit.contacts.adapter.TabPagerAdapter;
+import com.wit.contacts.bean.NetUser;
+import com.wit.contacts.bean.SystemContacts;
+import com.wit.contacts.bean.User;
+import com.wit.contacts.dao.SystemContactsDao;
+import com.wit.contacts.dao.SystemContactsDapImp;
+import com.wit.contacts.dao.UserDao;
+import com.wit.contacts.dao.UserDaoImp;
 import com.wit.contacts.data.ContactDatabaseHelper;
-import com.wit.contacts.view.fragment.ColleagueFragment;
-import com.wit.contacts.view.fragment.DiscoverFragment;
-import com.wit.contacts.view.fragment.HomeFragment;
-import com.wit.contacts.view.fragment.MeFragment;
+import com.wit.contacts.data.FileRecord;
+import com.wit.contacts.presenter.SynPresenter;
+import com.wit.contacts.view.tab.LocalContactsTab;
+import com.wit.contacts.view.tab.SystemContactsTab;
+import com.wit.contacts.view.viewInterface.ISynView;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener{
+import java.util.ArrayList;
+import java.util.List;
 
-    // 4 button selected code
-    public static int SELECTED_HOME = 0;
-    public static int SELECTED_FRIEND = 1;
-    public static int SELECTED_DISCOVER = 2;
-    public static int SELECTED_ME = 3;
 
-    //current selected;
-    private int SELECTED_CUR;
-    private Fragment currentFragment;
+public class MainActivity extends AppCompatActivity implements ISynView{
 
-    // 4 bottom on bottom_bar,  contain imageview and text view
-    private LinearLayout homeBtn;
-    private LinearLayout colleagueBtn;
-    private LinearLayout discoverBtn;
-    private LinearLayout meBtn;
+    private DrawerLayout mDrawerLayout;
+    private NavigationView navigationView;
+    private TabLayout mTabLayout = null;
+    private TextView userName;
+    private TextView phone;
 
-    private ImageView homeImg;
-    private ImageView colleagueImg;
-    private ImageView discoverImg;
-    private ImageView meImg;
+    private ViewPager mViewPager = null;
+    private LayoutInflater mInflater = null;
+    private Toolbar toolbar;
 
-    private TextView homeText;
-    private TextView colleagueText;
-    private TextView discoverText;
-    private TextView meText;
+    private List<View> mTabViewList = new ArrayList<>();   // 页卡View集合
+    private List<String> mTabTitleList = new ArrayList();  //页卡title集合
 
-    private FragmentManager fragmentManager;
-    private HomeFragment homeFragment;
-    private ColleagueFragment colleagueFragment;
-    private DiscoverFragment discoverFragment;
-    private MeFragment meFragment;
+    private LocalContactsTab mLocalContactsTab = null;    // 两个页卡View
+    private SystemContactsTab mSystemContactsTab = null;
 
-    /**
-     * 数据库操作：新建一个组到数据库中
-     * */
-    private GroupDao groupDao;
+    private UserDao userDao;
+    private SystemContactsDao systemContactsDao;
+
+    private SynPresenter synPresenter;
+
+    private NetUser netUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.content_main);
+        setContentView(R.layout.activity_main);
+        netUser = (NetUser)getIntent().getSerializableExtra("netUser");
         initView();
-        createDB();
-        setDefaultFragment();
-    }
 
-    //create database
-    private void createDB(){
-        ContactDatabaseHelper.getInstance(this);
-    }
-
-    //set default fragment: Homefragment
-    private void setDefaultFragment(){
-        fragmentManager = getSupportFragmentManager();
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
-        homeFragment = new HomeFragment();
-        transaction.replace(R.id.fragment_pager, homeFragment);
-        transaction.commit();
-        SELECTED_CUR = SELECTED_HOME;
-        currentFragment = homeFragment;
-    }
-
-    //init 4 btn view and add listener for botton
-    private void initView(){
-        homeBtn = (LinearLayout)findViewById(R.id.bottom_btn_home);
-        colleagueBtn = (LinearLayout)findViewById(R.id.bottom_btn_friend);
-        discoverBtn = (LinearLayout)findViewById(R.id.bottom_btn_discover);
-        meBtn = (LinearLayout)findViewById(R.id.bottom_btn_me);
-
-        homeImg = (ImageView)findViewById(R.id.imageview_home);
-        colleagueImg = (ImageView)findViewById(R.id.imageview_friend);
-        discoverImg = (ImageView)findViewById(R.id.imageview_discover);
-        meImg = (ImageView)findViewById(R.id.imageview_me);
-
-        homeText = (TextView)findViewById(R.id.textview_home);
-        colleagueText = (TextView)findViewById(R.id.textview_friend);
-        discoverText = (TextView)findViewById(R.id.textview_discover);
-        meText = (TextView)findViewById(R.id.textview_me);
-
-        homeBtn.setOnClickListener(this);
-        colleagueBtn.setOnClickListener(this);
-        discoverBtn.setOnClickListener(this);
-        meBtn.setOnClickListener(this);
+        ActivityCollector.addActivity(this);
     }
 
     @Override
-    public void onClick(View view) {
-        switch (view.getId()){
-            case R.id.bottom_btn_home:
-                if(SELECTED_CUR != SELECTED_HOME){
-                    SELECTED_CUR = SELECTED_HOME;                //set current selected
-                    resetBtn();
-                    homeImg.setImageResource(R.drawable.btn_home_pred);
-                    homeText.setTextColor(getResources().getColor(R.color.color_btn_selected));
-                    if(homeFragment == null) {
-                        homeFragment = new HomeFragment();
-                    }
-                    switchFragment(currentFragment, homeFragment);
-                }
-                break;
-            case R.id.bottom_btn_friend:
-                if(SELECTED_CUR != SELECTED_FRIEND){
-                    SELECTED_CUR = SELECTED_FRIEND;
-                    resetBtn();
-                    colleagueImg.setImageResource(R.drawable.btn_colleague_pred);
-                    colleagueText.setTextColor(getResources().getColor(R.color.color_btn_selected));
-                    if(colleagueFragment == null) {
-                        colleagueFragment = new ColleagueFragment();
-                    }
-                    switchFragment(currentFragment, colleagueFragment);
-                }
-                break;
-            case R.id.bottom_btn_discover:
-                if(SELECTED_CUR != SELECTED_DISCOVER){
-                    SELECTED_CUR = SELECTED_DISCOVER;
-                    resetBtn();
-                    discoverImg.setImageResource(R.drawable.btn_discover_pred);
-                    discoverText.setTextColor(getResources().getColor(R.color.color_btn_selected));
-                    if(discoverFragment == null) {
-                        discoverFragment = new DiscoverFragment();
-                    }
-                    switchFragment(currentFragment, discoverFragment);
-                }
-                break;
-            case R.id.bottom_btn_me:
-                if(SELECTED_CUR != SELECTED_ME){
-                    SELECTED_CUR = SELECTED_ME;
-                    resetBtn();
-                    meImg.setImageResource(R.drawable.btn_me_pred);
-                    meText.setTextColor(getResources().getColor(R.color.color_btn_selected));
-
-                    if(meFragment == null) {
-                        meFragment = new MeFragment();
-                    }
-                    switchFragment(currentFragment, meFragment);
-                }
-                break;
-            default:
-                break;
-        }
+    protected void onResume() {
+        super.onResume();
+        mLocalContactsTab.reLoadData();
     }
 
-    /**
-     * 在这里对Fragment进行切换，这个切换方式代替了replace，以至于每次切换的时候，不用重新实例化Fragment
-     * */
-    public void switchFragment(Fragment from, Fragment to) {
-        if (currentFragment != to) {
-            currentFragment = to;
-            FragmentTransaction transaction = fragmentManager.beginTransaction().setCustomAnimations(
-                    android.R.anim.fade_in, android.R.anim.fade_out);
-            if (!to.isAdded()) {	// 先判断是否被add过
-                transaction.hide(from).add(R.id.fragment_pager, to).commit(); // 隐藏当前的fragment，add下一个到Activity中
-            } else {
-                transaction.hide(from).show(to).commit(); // 隐藏当前的fragment，显示下一个
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_add_contacts) {
+            Toast.makeText(this,"Add One",Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(this, AddContactsActivity.class);
+            startActivity(intent);
+            overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left);
+            return true;
+        }else if(id == R.id.action_add_group){
+            Toast.makeText(this,"Add Group",Toast.LENGTH_SHORT).show();
+            showAGroupDialog();
+            return true;
+        }/*else if(id == R.id.action_read_file){
+            //open another activity
+            Intent intent = new Intent(this, ReadFileActivity.class);
+            startActivity(intent);
+        }else if (id == R.id.action_save_local){
+            Toast.makeText(this, "正在拼命保存中",Toast.LENGTH_SHORT).show();
+            saveLocal();
+        }*/
+        else if(id == android.R.id.home){
+            mDrawerLayout.openDrawer(GravityCompat.START);
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void initView(){
+
+        synPresenter = new SynPresenter(this, this);
+
+        toolbar = (Toolbar)findViewById(R.id.toolbar_home);
+        setSupportActionBar(toolbar);
+
+        mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
+        /*ActionBar actionBar = getSupportActionBar();
+        if(actionBar != null){
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
+        }*/
+        navigationView = (NavigationView)findViewById(R.id.navigation_view);
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()){
+                    case R.id.nav_syn:
+                        mDrawerLayout.closeDrawers();
+                        synPresenter.load();
+                        break;
+                    case R.id.nav_setting:
+                        Intent intent = new Intent(MainActivity.this, SettingActivity.class);
+                        startActivity(intent);
+                        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                        break;
+                }
+                return false;
+            }
+        });
+        userName = (TextView)navigationView.getHeaderView(0).findViewById(R.id.username);
+        phone = (TextView)navigationView.getHeaderView(0).findViewById(R.id.phone);
+        phone.setText(netUser.getPhone());
+        userName.setText(netUser.getName());
+
+        mTabLayout = (TabLayout)findViewById(R.id.layout_tab);
+        mViewPager = (ViewPager)findViewById(R.id.vp_view);
+
+        mInflater = LayoutInflater.from(this);
+
+        mLocalContactsTab = new LocalContactsTab(mInflater);     //初始化
+        mSystemContactsTab = new SystemContactsTab(mInflater);
+
+        mTabViewList.add(mSystemContactsTab.getView());
+        mTabViewList.add(mLocalContactsTab.getView());           //将View添加到List中
+
+        mTabTitleList.add("系统联系人");
+        mTabTitleList.add("本地联系人");                         //将Title添加到List中
+
+        mTabLayout.setTabMode(TabLayout.MODE_FIXED);       //设置页卡模式
+
+        mTabLayout.addTab(mTabLayout.newTab().setText(mTabTitleList.get(0)));   //将卡页添加到View中
+        mTabLayout.addTab(mTabLayout.newTab().setText(mTabTitleList.get(1)));
+
+        TabPagerAdapter tabPagerAdapter = new TabPagerAdapter(mTabViewList, mTabTitleList);
+        mViewPager.setAdapter(tabPagerAdapter);              //给ViewPager设置适配器
+        mTabLayout.setupWithViewPager(mViewPager);           //将TabLayout和ViewPager关联起来。
+        mTabLayout.setTabsFromPagerAdapter(tabPagerAdapter); //给Tabs设置适配器
+
+        userDao = new UserDaoImp();
+        systemContactsDao = new SystemContactsDapImp();
+
+        mLocalContactsTab.reLoadData();
+    }
+    private AlertDialog addGroupDialog;
+    private void showAGroupDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = getLayoutInflater();
+        View dialogView = null;
+        dialogView = inflater.inflate(R.layout.dialog_add_group, null);
+        final EditText addGroupEditText = (EditText)dialogView.findViewById(R.id.dialog_add_group_name);
+
+        builder.setView(dialogView)
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        if( addGroupEditText.getText().toString().trim().equals("")){
+                            addGroupEditText.setHint("请输入组名称");
+                            addGroupEditText.setHintTextColor(Color.RED);
+                        }else{
+                            //插入数据库，并且销毁Dialog
+                            mLocalContactsTab.insertGroup(addGroupEditText.getText().toString());
+                            addGroupDialog.dismiss();
+                        }
+                    }
+                })
+                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        addGroupDialog.dismiss();
+                    }
+                });
+        builder.setTitle("请输入组名");
+        addGroupDialog = builder.create();
+        addGroupDialog.show();
+    }
+
+    private void saveLocal(){
+        List<User> users = userDao.selectAllUser();
+        List<SystemContacts> systemContactses = systemContactsDao.selectAllSystemContacts();
+        if(users != null){
+            for(int i = 0; i < users.size(); i ++){
+                String name = users.get(i).getName();
+                String phone = users.get(i).getPhone();
+                recordData(name);
+                recordData(phone);
             }
         }
+        if(systemContactses != null){
+            for(int i = 0; i < systemContactses.size(); i ++){
+                String name = systemContactses.get(i).getName();
+                String phone = systemContactses.get(i).getPhone();
+                recordData(name);
+                recordData(phone);
+            }
+        }
+        Toast.makeText(this, "已保存到文件管理的根目录Contacts.txt文件",Toast.LENGTH_LONG).show();
     }
-    /**
-     * reset the btn text color and imageview:
-     * 1. reset all btn to normal text color and image view
-     * */
-    private void resetBtn(){
-        homeImg.setImageResource(R.drawable.btn_home_nor);
-        homeText.setTextColor(getResources().getColor(R.color.color_btn_normal));
+    FileRecord fileRecord = null;
+    private void recordData(String data){
+        try{
+            if(fileRecord == null){
+                fileRecord = new FileRecord("/mnt/sdcard/Contacts.txt");
+            }
+            fileRecord.Write(data);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
 
-        colleagueImg.setImageResource(R.drawable.btn_colleague_nor);
-        colleagueText.setTextColor(getResources().getColor(R.color.color_btn_normal));
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ActivityCollector.removeActivity(this);
+    }
 
-        discoverImg.setImageResource(R.drawable.btn_discover_nor);
-        discoverText.setTextColor(getResources().getColor(R.color.color_btn_normal));
+    @Override
+    public void showLoading() {
+        Toast.makeText(this, "正在同步....",Toast.LENGTH_LONG).show();
+    }
 
-        meImg.setImageResource(R.drawable.btn_me_nor);
-        meText.setTextColor(getResources().getColor(R.color.color_btn_normal));
+    @Override
+    public void showFinishLoading() {
+        Toast.makeText(this, "同步完成",Toast.LENGTH_SHORT).show();
     }
 }
